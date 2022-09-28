@@ -1,6 +1,6 @@
 #include <stdio.h>
 
-#define maxNumber 9
+#define maxDigit 9
 #define maxSum 28
 int main()
 {
@@ -12,13 +12,13 @@ int main()
 
 
 	// Подсчитываем кол-во спсобов получить суммы от 0 до 27
-	for(int i = 0; i <= maxNumber;++i)
+	for(int i = 0; i <= maxDigit; ++i)
 	{
-		for(int j = 0; j <= maxNumber;++j)
+		for(int j = 0; j <= maxDigit; ++j)
 		{
-			for(int k = 0; k <= maxNumber;++k)
+			for(int k = 0; k <= maxDigit; ++k)
 			{
-				amountOfWays[i + j + k]++;
+				++amountOfWays[i + j + k];
 			}
 		}
 	}
@@ -27,6 +27,6 @@ int main()
 	{
 			amountOfLuckyTickets += amountOfWays[i] * amountOfWays[i];
 	}
-	printf("Amount of lucky tickets = %d",amountOfLuckyTickets);
+	printf("Amount of lucky tickets = %d\n", amountOfLuckyTickets);
 	return 0;
 }

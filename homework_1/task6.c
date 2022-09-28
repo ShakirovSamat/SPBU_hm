@@ -2,13 +2,14 @@
 #include <string.h>
 
 #define maxLn 1000
+
 int main()
 {
 	char string[maxLn];
 	char substring[maxLn];
 	int count = 0;
 
-	printf("The program counts the number of subЫtrings in a string. Max length of a string anВ a substring is 1000 chars\n");
+	printf("The program counts the number of subtrings in a string. Max length of a string and a substring is 1000 chars\n");
 
 	printf("Enter the string = ");
 	scanf_s("%s", &string);
@@ -31,6 +32,6 @@ int main()
 		if (isSubstring) ++count; 
 	}
 	
-	printf("Number of substring in string is %d", count);
+	printf("Number of substring in string is %d\n", count);
 	return 0;
 }

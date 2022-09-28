@@ -16,9 +16,21 @@ int main()
 	{
 		printf("Enter divisor = ");
 		scanf_s("%d", &divisor);
+		if (divisor == 0)
+		{
+			printf("You can't divide by zero\n");
+		}
 	}
 
-	signOfAnswer = (dividend * divisor > 0) ? 1: -1;
+	if (divisor > 0 == dividend > 0)
+	{
+		signOfAnswer = 1;
+	}
+	else
+	{
+		signOfAnswer = -1;
+	}
+
 
 	if (dividend < 0)
 	{
@@ -33,7 +45,7 @@ int main()
 		++quotient;
 	}
 
-	printf("The incomplete quotient = %d", quotient * signOfAnswer);
+	printf("The incomplete quotient = %d\n", quotient * signOfAnswer);
 
 	return 0;
 	 
