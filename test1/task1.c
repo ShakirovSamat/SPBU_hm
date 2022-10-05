@@ -9,7 +9,7 @@ int insertSort(int *ar, int size)
             int key = ar[i];
             int j = i - 1;
             int inlast = i;
-            while (ar[j] > key || ar[j] % 2 == 1)
+            while ((ar[j] > key || ar[j] % 2 == 1) && j >= 0)
             {
                 if (ar[j] % 2 == 0)
                 {
@@ -60,11 +60,20 @@ int main()
         printf("Program works correctly\n");
     }
 
-    int array[10] = {4, 1, 2, 5, 3, 8, 9 ,10, 7, 6};
+    int array[100] = {0};
+    int ln = 0;
+    while (1 > ln || ln > 100)
+    {
+        scanf("%d", &ln);
+    }
+    for(int i = 0; i < ln; i++)
+    {
+        scanf("%d", &array[i]);
+    }
     
-    insertSort(array, 10);
+    insertSort(array, ln);
 
-    for(int i = 0; i < 10; ++i)
+    for(int i = 0; i < ln; ++i)
     {
         printf("%d ", array[i]);
     }
