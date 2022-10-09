@@ -1,10 +1,17 @@
 #include <stdio.h>
+#include <string.h>
 
-void showList(char* path)
+typedef struct{
+    char name[20];
+    char number[20];
+}Person;
+
+
+void showList(char* path, Person* phoneBook, int amountOfPersons)
 {
     FILE* fl = fopen(path, "a+");
-    char name[100];
-    char number[100];
+    char name[20];
+    char number[20];
     int line = 1;
     printf("\n");
     while(fscanf(fl, "%s %s", name, number) != EOF)
@@ -12,14 +19,44 @@ void showList(char* path)
         printf("%d) Name: %s; Number: %s", line, name, number);
         ++line;
     }
+
+    printf("\n");
+
+    for(int i = 0; i < amountOfPersons; ++i)
+    {
+        printf("%d) Name: %s; Number: %s", line + i + 1, phoneBook[i].name, phoneBook[i].number);
+    }
     printf("\n\n");
     fclose(fl);
+}
+
+void addPerson(Person* phoneBook, int* amountOfPersons)
+{
+    char name[20];
+    char number[20];
+    printf("Enter name: ");
+    fflush(stdin);
+    fgets(name, 20, stdin);
+    fflush(stdin);
+    printf("Enter number: ");
+    fgets(number, 20, stdin);
+    fflush(stdin);
+
+    name[strlen(name) - 1] = '\0';
+    number[strlen(number) - 1] = '\0';
+    Person newPerson;
+    strcpy(newPerson.name, name);
+    strcpy(newPerson.number, number);
+    phoneBook[*amountOfPersons] = newPerson;
+    ++(*amountOfPersons);
 }
 
 
 int main()
 {
     int comand = -1;
+    Person phoneBook[100];
+    int amountOfPersons = 0;
     printf("This is a phone book\nComands:\n0 - Exit\n1 - Add person\n2 - Show list of all people\n3 - Find phone number by name"
     "\n4 - Find nume by phone number\n5 - Save added data\n");
     printf("Enter comand: ");
@@ -30,10 +67,10 @@ int main()
         switch (comand)
         {
             case 1:
-            showList("Data.txt");
+                addPerson(phoneBook, &amountOfPersons);
                 break;
             case 2:
-
+                showList("Data.txt", phoneBook, amountOfPersons);
                 break;
             case 3:
 
