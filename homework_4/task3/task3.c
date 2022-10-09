@@ -16,17 +16,15 @@ void showList(char* path, Person* phoneBook, int amountOfPersons)
     printf("\n");
     while(fscanf(fl, "%s %s", name, number) != EOF)
     {
-        printf("%d) Name: %s; Number: %s", line, name, number);
+        printf("%d) Name: %s; Number: %s\n", line, name, number);
         ++line;
     }
 
-    printf("\n");
-
     for(int i = 0; i < amountOfPersons; ++i)
     {
-        printf("%d) Name: %s; Number: %s", line + i + 1, phoneBook[i].name, phoneBook[i].number);
+        printf("%d) Name: %s; Number: %s\n", line + i + 1, phoneBook[i].name, phoneBook[i].number);
     }
-    printf("\n\n");
+    printf("\n");
     fclose(fl);
 }
 
@@ -49,6 +47,20 @@ void addPerson(Person* phoneBook, int* amountOfPersons)
     strcpy(newPerson.number, number);
     phoneBook[*amountOfPersons] = newPerson;
     ++(*amountOfPersons);
+}
+
+void savePersons(char* path, Person* phoneBook, int* amountOfPersons)
+{
+    FILE* fl = fopen(path, "a");
+    for(int i = 0; i < amountOfPersons; ++i)
+    {
+        fputs(phoneBook[i].name, fl);
+        fputs(" ", fl);
+        fputs(phoneBook[i].number, fl);
+        fputs("\n", fl);
+    }
+    fclose(fl);
+    amountOfPersons = 0;
 }
 
 
@@ -79,7 +91,7 @@ int main()
 
                 break;
             case 5:
-
+                savePersons("Data.txt", phoneBook, amountOfPersons);
                 break;
             default:
                 printf("This comand doesn't exists\n"); 
