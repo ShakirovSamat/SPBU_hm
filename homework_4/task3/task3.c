@@ -1,6 +1,5 @@
 #include <stdio.h>
 #include <string.h>
-#include <stdbool.h>
 
 typedef struct{
     char name[20];
@@ -75,13 +74,13 @@ void findNumberByName(char* path, Person* phoneBook, int amountOfPersons)
     char name[20];
     char number[20];
     searchName[strlen(searchName) - 1] = '\0';
-    bool isFInd = False;
 
     while (fscanf(fl, "%s %s", name, number) != EOF)
     {
         if (strcmp(searchName, name)==0)
         {
             printf("%s\n", number);
+            return;
         }
     }
 
@@ -90,12 +89,43 @@ void findNumberByName(char* path, Person* phoneBook, int amountOfPersons)
         if (strcmp(searchName ,phoneBook[i].name) == 0)
         {
             printf("%s\n", phoneBook[i].number);
+            return;
         }
     }
-    if (!isFInd)
+    printf("Wasn't found\n");
+    fclose(fl);
+}
+
+void findNameByNumber(char* path, Person* phoneBook, int amountOfPersons)
+{
+    FILE* fl = fopen(path, "r");
+    char searchNumber[20];
+    fflush(stdin);
+    fgets(searchNumber, 20, stdin);
+    fflush(stdin);
+
+    char name[20];
+    char number[20];
+    searchNumber[strlen(searchNumber) - 1] = '\0';
+
+    while (fscanf(fl, "%s %s", name, number) != EOF)
     {
-        printf("Wasn't found\n");
+        if (strcmp(searchNumber, number)==0)
+        {
+            printf("%s\n", name);
+            return;
+        }
     }
+
+    for (int i = 0; i < amountOfPersons; ++i)
+    {
+        if (strcmp(searchNumber ,phoneBook[i].number) == 0)
+        {
+            printf("%s\n", phoneBook[i].name);
+            return;
+        }
+    }
+    printf("Wasn't found\n");
     fclose(fl);
 }
 
@@ -123,7 +153,7 @@ int main()
                 findNumberByName("Data.txt", phoneBook, amountOfPersons);
                 break;
             case 4:
-
+                findNameByNumber("Data.txt",phoneBook, amountOfPersons);
                 break;
             case 5:
                 savePersons("Data.txt", phoneBook, amountOfPersons);
