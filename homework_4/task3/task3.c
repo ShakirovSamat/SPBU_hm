@@ -1,5 +1,22 @@
 #include <stdio.h>
 
+void showList(char* path)
+{
+    FILE* fl = fopen(path, "a+");
+    char name[100];
+    char number[100];
+    int line = 1;
+    printf("\n");
+    while(fscanf(fl, "%s %s", name, number) != EOF)
+    {
+        printf("%d) Name: %s; Number: %s", line, name, number);
+        ++line;
+    }
+    printf("\n\n");
+    fclose(fl);
+}
+
+
 int main()
 {
     int comand = -1;
@@ -13,7 +30,7 @@ int main()
         switch (comand)
         {
             case 1:
-
+            showList("Data.txt");
                 break;
             case 2:
 
