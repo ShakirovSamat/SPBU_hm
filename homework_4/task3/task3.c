@@ -1,5 +1,6 @@
 #include <stdio.h>
 #include <string.h>
+#include <stdbool.h>
 
 typedef struct{
     char name[20];
@@ -9,18 +10,18 @@ typedef struct{
 
 void showList(char* path, Person* phoneBook, int amountOfPersons)
 {
-    FILE* fl = fopen(path, "a+");
+    FILE* fl = fopen(path, "r");
     char name[20];
     char number[20];
     int line = 1;
     printf("\n");
-    while(fscanf(fl, "%s %s", name, number) != EOF)
+    while (fscanf(fl, "%s %s", name, number) != EOF)
     {
         printf("%d) Name: %s; Number: %s\n", line, name, number);
         ++line;
     }
 
-    for(int i = 0; i < amountOfPersons; ++i)
+    for (int i = 0; i < amountOfPersons; ++i)
     {
         printf("%d) Name: %s; Number: %s\n", line + i + 1, phoneBook[i].name, phoneBook[i].number);
     }
@@ -52,7 +53,7 @@ void addPerson(Person* phoneBook, int* amountOfPersons)
 void savePersons(char* path, Person* phoneBook, int* amountOfPersons)
 {
     FILE* fl = fopen(path, "a");
-    for(int i = 0; i < amountOfPersons; ++i)
+    for (int i = 0; i < amountOfPersons; ++i)
     {
         fputs(phoneBook[i].name, fl);
         fputs(" ", fl);
@@ -63,6 +64,40 @@ void savePersons(char* path, Person* phoneBook, int* amountOfPersons)
     amountOfPersons = 0;
 }
 
+void findNumberByName(char* path, Person* phoneBook, int amountOfPersons)
+{
+    FILE* fl = fopen(path, "r");
+    char searchName[20];
+    fflush(stdin);
+    fgets(searchName, 20, stdin);
+    fflush(stdin);
+
+    char name[20];
+    char number[20];
+    searchName[strlen(searchName) - 1] = '\0';
+    bool isFInd = False;
+
+    while (fscanf(fl, "%s %s", name, number) != EOF)
+    {
+        if (strcmp(searchName, name)==0)
+        {
+            printf("%s\n", number);
+        }
+    }
+
+    for (int i = 0; i < amountOfPersons; ++i)
+    {
+        if (strcmp(searchName ,phoneBook[i].name) == 0)
+        {
+            printf("%s\n", phoneBook[i].number);
+        }
+    }
+    if (!isFInd)
+    {
+        printf("Wasn't found\n");
+    }
+    fclose(fl);
+}
 
 int main()
 {
@@ -84,8 +119,8 @@ int main()
             case 2:
                 showList("Data.txt", phoneBook, amountOfPersons);
                 break;
-            case 3:
-
+            case 3:;
+                findNumberByName("Data.txt", phoneBook, amountOfPersons);
                 break;
             case 4:
 
