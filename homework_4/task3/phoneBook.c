@@ -1,6 +1,6 @@
 #include <stdio.h>
 #include <string.h>
-    
+#include "phoneBook.h"    
 
 void showList(char* path, Person* phoneBook, int amountOfPersons)
 {
@@ -27,14 +27,15 @@ void addPerson(Person* phoneBook, int* amountOfPersons)
 {
     char name[20];
     char number[20];
-    printf("Enter name: ");
+    printf("\nEnter name: ");
     fflush(stdin);
     fgets(name, 20, stdin);
     fflush(stdin);
     printf("Enter number: ");
     fgets(number, 20, stdin);
     fflush(stdin);
-
+    printf("\n");
+    
     name[strlen(name) - 1] = '\0';
     number[strlen(number) - 1] = '\0';
     Person newPerson;
@@ -47,7 +48,7 @@ void addPerson(Person* phoneBook, int* amountOfPersons)
 void savePersons(char* path, Person* phoneBook, int* amountOfPersons)
 {
     FILE* fl = fopen(path, "a");
-    for (int i = 0; i < amountOfPersons; ++i)
+    for (int i = 0; i < *amountOfPersons; ++i)
     {
         fputs(phoneBook[i].name, fl);
         fputs(" ", fl);
@@ -62,6 +63,7 @@ void findNumberByName(char* path, Person* phoneBook, int amountOfPersons)
 {
     FILE* fl = fopen(path, "r");
     char searchName[20];
+    printf("\n");
     fflush(stdin);
     fgets(searchName, 20, stdin);
     fflush(stdin);

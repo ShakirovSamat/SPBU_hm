@@ -36,6 +36,7 @@ int main()
             default:
                 printf("This comand doesn't exists\n"); 
         }
+        
         printf("Enter comand: ");
         scanf("%d", &comand);
     }
