@@ -1,6 +1,11 @@
 #ifndef CORE_H_INCLUDED
 #define CORE_H_INCLUDED
 
+typedef struct{
+    char name[20];
+    char number[20];
+}Person;
+
 void showList(char* path, Person* phoneBook, int amountOfPersons);
 
 void addPerson(Person* phoneBook, int* amountOfPersons);

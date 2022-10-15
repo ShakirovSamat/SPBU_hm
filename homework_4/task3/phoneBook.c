@@ -1,11 +1,6 @@
 #include <stdio.h>
 #include <string.h>
-
-typedef struct{
-    char name[20];
-    char number[20];
-}Person;
-
+    
 
 void showList(char* path, Person* phoneBook, int amountOfPersons)
 {

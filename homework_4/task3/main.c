@@ -1,6 +1,6 @@
 #include <stdio.h>
 #include <string.h>
-#include <phoneBook.h>
+#include "phoneBook.h"
 
 int main()
 {
@@ -31,7 +31,7 @@ int main()
                 findNameByNumber("Data.txt",phoneBook, amountOfPersons);
                 break;
             case 5:
-                savePersons("Data.txt", phoneBook, amountOfPersons);
+                savePersons("Data.txt", phoneBook, &amountOfPersons);
                 break;
             default:
                 printf("This comand doesn't exists\n"); 
