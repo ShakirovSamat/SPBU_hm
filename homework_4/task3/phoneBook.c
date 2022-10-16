@@ -5,6 +5,10 @@
 void showList(char* path, Person* phoneBook, int amountOfPersons)
 {
     FILE* fl = fopen(path, "r");
+    if (fl ==  NULL)
+    {
+        return -1;
+    }
     char name[20];
     char number[20];
     int line = 1;
@@ -23,7 +27,7 @@ void showList(char* path, Person* phoneBook, int amountOfPersons)
     fclose(fl);
 }
 
-void addPerson(Person* phoneBook, int* amountOfPersons)
+int addPerson(Person* phoneBook, int* amountOfPersons)
 {
     char name[20];
     char number[20];
@@ -42,12 +46,20 @@ void addPerson(Person* phoneBook, int* amountOfPersons)
     strcpy(newPerson.name, name);
     strcpy(newPerson.number, number);
     phoneBook[*amountOfPersons] = newPerson;
+    if(phoneBook[amountOfPersons] == NULL || phoneBook[amountOfPersons].name == NULL || phoneBook[amountOfPersons].number == NULL)
+    {
+        return -1;
+    }
     ++(*amountOfPersons);
 }
 
-void savePersons(char* path, Person* phoneBook, int* amountOfPersons)
+int savePersons(char* path, Person* phoneBook, int* amountOfPersons)
 {
     FILE* fl = fopen(path, "a");
+    if (fl == NULL)
+    {
+        return --1;
+    }
     for (int i = 0; i < *amountOfPersons; ++i)
     {
         fputs(phoneBook[i].name, fl);
@@ -57,11 +69,16 @@ void savePersons(char* path, Person* phoneBook, int* amountOfPersons)
     }
     fclose(fl);
     amountOfPersons = 0;
+    return 0;
 }
 
-void findNumberByName(char* path, Person* phoneBook, int amountOfPersons)
+int findNumberByName(char* path, Person* phoneBook, int amountOfPersons)
 {
     FILE* fl = fopen(path, "r");
+    if (fl == NULL)
+    {
+        return -1;
+    }
     char searchName[20];
     printf("\n");
     fflush(stdin);
@@ -77,7 +94,7 @@ void findNumberByName(char* path, Person* phoneBook, int amountOfPersons)
         if (strcmp(searchName, name)==0)
         {
             printf("%s\n", number);
-            return;
+            return 0;
         }
     }
 
@@ -86,16 +103,22 @@ void findNumberByName(char* path, Person* phoneBook, int amountOfPersons)
         if (strcmp(searchName ,phoneBook[i].name) == 0)
         {
             printf("%s\n", phoneBook[i].number);
-            return;
+            return 0;
         }
     }
     printf("Wasn't found\n");
     fclose(fl);
+    return 0; 
+
 }
 
 void findNameByNumber(char* path, Person* phoneBook, int amountOfPersons)
 {
     FILE* fl = fopen(path, "r");
+    if (fl == NULL)
+    {
+        return -1;
+    }
     char searchNumber[20];
     fflush(stdin);
     fgets(searchNumber, 20, stdin);
@@ -110,7 +133,7 @@ void findNameByNumber(char* path, Person* phoneBook, int amountOfPersons)
         if (strcmp(searchNumber, number)==0)
         {
             printf("%s\n", name);
-            return;
+            return 0;
         }
     }
 
@@ -119,9 +142,10 @@ void findNameByNumber(char* path, Person* phoneBook, int amountOfPersons)
         if (strcmp(searchNumber ,phoneBook[i].number) == 0)
         {
             printf("%s\n", phoneBook[i].name);
-            return;
+            return 0;
         }
     }
     printf("Wasn't found\n");
     fclose(fl);
+    return 0;
 }
