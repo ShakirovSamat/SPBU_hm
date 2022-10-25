@@ -2,6 +2,7 @@
 #include <stddef.h>
 #include <stdio.h>
 #include <stdlib.h>
+#include <stdbool.h>
 
 typedef struct StackElement
 {
@@ -75,5 +76,10 @@ int deleteStack(Stack *stack)
 
     free(stack);
     return 0;
+}
+
+bool isEmptyStack(Stack *stack)
+{
+    return stack->top == NULL;
 }
 
