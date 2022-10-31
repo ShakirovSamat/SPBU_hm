@@ -52,6 +52,6 @@ int main()
     {
         delete(list, step);
     }
-    printList(list);
+    printf("Number of last warrior: %d", get(list, 0));
     return 0;
 }
