@@ -44,6 +44,25 @@ Error append(LoopedList *list, int value)
     return 0;
 }
 
+int get(LoopedList *list, int index)
+{
+    if (list == NULL)
+    {
+        return -1;
+    }
+
+    Node *curNode = list->head;
+    Node *prevNode = NULL;
+
+    for (int i = 0; i < index; i++)
+    {
+        prevNode = curNode;
+        curNode = curNode->next;
+    }
+
+    return curNode->value;
+}
+
 Error delete(LoopedList *list, int index)
 {
     if (list == NULL)
@@ -58,16 +77,16 @@ Error delete(LoopedList *list, int index)
         return -1;
     }         
 
-    Node *current = list->head;  
-    Node *previous = NULL;
+    Node *curNode = list->head;  
+    Node *prevNode = NULL;
 
     int i = 0;
     
 
-    while (i != (index - 1))
+    while (i < index)
     { 
-        previous = current;
-        current = current->next;
+        prevNode = curNode;
+        curNode = curNode->next;
         ++i;
     } 
 
@@ -79,12 +98,12 @@ Error delete(LoopedList *list, int index)
     }
     else
     {
-        list->head = current->next;
-        list->tail = previous;
+        list->head = curNode->next;
+        list->tail = prevNode;
         list->tail->next = list->head;
     }
 
-    free(current);
+    free(curNode);
 }
 
 int getLen(LoopedList *list)
