@@ -2,6 +2,7 @@
 #include <stdlib.h>
 #include <stddef.h>
 #include <stdio.h>
+#include <stdbool.h>
 
 typedef struct Node
 {
@@ -37,7 +38,7 @@ int addValue(SortedList *sortedList, int value)
         sortedList->head = newNode;
         return 0;
     }
-    if (value >= sortedList->head->value)
+    if (value <= sortedList->head->value)
     {
         newNode->next = sortedList->head;
         sortedList->head = newNode;
@@ -105,4 +106,27 @@ int printList(SortedList *sortedList)
         curNode = curNode->next;
     }
     return 0;
+}
+
+bool sortedListTest()
+{
+    SortedList *list = createSortedList();
+    addValue(list, 1);
+    addValue(list, 5);
+    addValue(list, 2);
+    addValue(list, 7);
+    deleteValue(list, 5);
+    if (list->head->value != 1)
+    {
+        return false;
+    }
+    if (list->head->next->value != 2)
+    {
+        return false;
+    }
+    if (list->head->next->next->value != 7)
+    {
+        return false;
+    }
+    return true;
 }

@@ -3,6 +3,11 @@
 
 int main()
 {
+    if (!sortedListTest())
+    {
+        printf("Error in SortedList");
+        return -1;
+    }
     int comand = -1;
     SortedList *sortedList = createSortedList(); 
     do
