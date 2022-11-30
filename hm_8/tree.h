@@ -2,14 +2,10 @@
 
 typedef struct Tree Tree;
 
-Tree *leftRotate(Tree *tree);
-
-Tree *rihghtRotate(Tree *tree);
-
-Tree *bigLeftRotate(Tree *tree);
-
-Tree *bigRightRotate(Tree *tree);
-
-Tree *balance(Tree *tree);
+Tree *createtTree();
 
 Tree *insert(Tree *tree, int key, char *value);
+
+char *get(Tree *tree, int key);
+
+int delete (Tree *tree, int key);
