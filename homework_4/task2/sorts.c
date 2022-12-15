@@ -5,6 +5,7 @@ void quickSort(int *ar, int first, int last)
         int left = first;
         int right = last;
         int middle = ar[(first + last) / 2];
+        // вынести отдельно
         do
         {
             while (ar[left] < middle)
