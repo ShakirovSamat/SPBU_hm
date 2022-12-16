@@ -1,7 +1,8 @@
 #include <stdio.h>
+#include <stdbool.h>
 #include "sorts.h"
 // bool вместо int
-int test()
+bool test()
 {
     int nums[10] = {5, 6, 1, 2, 3, 9, 7, 8, 4, 10};
     quickSort(nums, 0, 9);
@@ -10,10 +11,10 @@ int test()
         if (nums[i] > nums[i + 1])
             ;
         {
-            return -1;
+            return false;
         }
     }
-    return 0;
+    return true;
 }
 
 int main()
@@ -37,18 +38,15 @@ int main()
     for (int i = 0; i < length; ++i)
     {
         int error = fscanf(file, "%d", &array[i]);
-        if (error == 1)
+        if (error == 0)
         {
+            printf("Wrong data");
+            return -1;
         }
     }
 
     quickSort(array, 0, length - 1);
     // Другой вывод цель задачи
-    for (int i = 0; i < length; ++i)
-    {
-        printf("%d ", array[i]);
-    }
-    printf("\n");
 
     return 0;
 }

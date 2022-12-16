@@ -1,32 +1,35 @@
-void quickSort(int *ar, int first, int last)
+int partition(int *array, int left, int right)
+{
+    int middle = array[(left + right) / 2];
+    do
+    {
+        while (array[left] < middle)
+        {
+            left++;
+        }
+        while (array[right] > middle)
+        {
+            right--;
+        }
+        if (left <= right)
+        {
+            int temp = array[left];
+            array[left] = array[right];
+            array[right] = temp;
+            left++;
+            right--;
+        }
+    } while (left <= right);
+    return right;
+}
+
+void quickSort(int *array, int first, int last)
 {
     if (first < last)
     {
-        int left = first;
-        int right = last;
-        int middle = ar[(first + last) / 2];
         // вынести отдельно
-        do
-        {
-            while (ar[left] < middle)
-            {
-                left++;
-            }
-            while (ar[right] > middle)
-            {
-                right--;
-            }
-            if (left <= right)
-            {
-                int temp = ar[left];
-                ar[left] = ar[right];
-                ar[right] = temp;
-                left++;
-                right--;
-            }
-        } while (left <= right);
-
-        quickSort(ar, first, right);
-        quickSort(ar, left, last);
+        int pivot = partition(array, first, last);
+        quickSort(array, first, pivot);
+        quickSort(array, pivot - 1, last);
     }
 }
