@@ -4,14 +4,14 @@
 #include <stdbool.h>
 #include <stdlib.h>
 
-#define SIZE 16
-
+#define SIZE 32
+// 16 бит
 void decToBin(int dec, int size, int *bin)
 {
     for (int i = 0; i < size; i++)
     {
-        bin[i] = dec % 2;
-        dec /= 2;
+        bin[i] = dec & 1;
+        dec >>= 1;
     }
 }
 void addBin(int *bin1, int *bin2, int size, int *res)
@@ -92,17 +92,11 @@ int main()
     int *bin1 = (int *)calloc(SIZE, sizeof(int));
     int *bin2 = (int *)calloc(SIZE, sizeof(int));
     // Добавить отрицательные числа
-    do
-    {
-        printf("Введите первое число. Оно должно быть неотрицательным\n");
-        scanf("%d", &dec1);
-    } while (dec1 < 0);
+    printf("Введите первое число. Оно должно быть неотрицательным\n");
+    scanf("%d", &dec1);
 
-    do
-    {
-        printf("Введите второе число. Оно должно быть неотрицательным\n");
-        scanf("%d", &dec2);
-    } while (dec2 < 0);
+    printf("Введите второе число. Оно должно быть неотрицательным\n");
+    scanf("%d", &dec2);
 
     decToBin(dec1, SIZE, bin1);
     decToBin(dec2, SIZE, bin2);
@@ -114,6 +108,7 @@ int main()
 
     int *res = (int *)calloc(SIZE, sizeof(int));
     addBin(bin1, bin2, SIZE, res);
+    printBin(res, SIZE);
     printf("Десятичная запись суммы чисел: ");
     printf("%d\n", binToDec(res, SIZE));
 
