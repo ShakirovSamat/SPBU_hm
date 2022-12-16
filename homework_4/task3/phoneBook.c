@@ -10,8 +10,8 @@ int showPhoneBook(char *path, Person *phoneBook, int amountOfPersons)
     {
         return -1;
     }
-    char name[20];
-    char number[20];
+    char name[20] = {0};
+    char number[20] = {0};
     int line = 1;
     printf("\n");
     while (fscanf(fl, "%s %s", name, number) != EOF)
