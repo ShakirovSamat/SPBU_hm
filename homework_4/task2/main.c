@@ -1,7 +1,8 @@
 #include <stdio.h>
 #include <stdbool.h>
+#include <stdlib.h>
 #include "sorts.h"
-// bool вместо int
+
 bool test()
 {
     int nums[10] = {5, 6, 1, 2, 3, 9, 7, 8, 4, 10};
@@ -9,7 +10,6 @@ bool test()
     for (int i = 0; i < 9; ++i)
     {
         if (nums[i] > nums[i + 1])
-            ;
         {
             return false;
         }
@@ -31,22 +31,33 @@ int main()
     }
 
     int length = 0;
+    fscanf(file, "%d", &length);
     int *array = (int *)calloc(length, sizeof(int));
 
-    fscanf(file, "%d", &length);
-    // Испарваить ввод
     for (int i = 0; i < length; ++i)
     {
-        int error = fscanf(file, "%d", &array[i]);
-        if (error == 0)
-        {
-            printf("Wrong data");
-            return -1;
-        }
+        fscanf(file, "%d", &array[i]);
     }
 
     quickSort(array, 0, length - 1);
-    // Другой вывод цель задачи
 
+    int mostCommon = 0;
+    int max = 1;
+    int counter = 1;
+    for (int i = 1; i < 30; i++)
+    {
+        if (array[i - 1] == array[i])
+        {
+            counter++;
+        }
+        else if (counter > max)
+        {
+            max = counter;
+            mostCommon = array[i - 1];
+            counter = 1;
+        }
+    }
+    printf("Most common number is %d. It appears %d times", mostCommon, max);
+    printf("\n");
     return 0;
 }

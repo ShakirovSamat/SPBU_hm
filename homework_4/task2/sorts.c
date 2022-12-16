@@ -1,35 +1,33 @@
-int partition(int *array, int left, int right)
+
+int partition(int *array, int start, int end)
 {
-    int middle = array[(left + right) / 2];
-    do
+    int temp;
+    int marker = start;
+    for (int i = start; i < end; i++)
     {
-        while (array[left] < middle)
+        if (array[i] < array[end])
         {
-            left++;
+            temp = array[marker];
+            array[marker] = array[i];
+            array[i] = temp;
+            marker += 1;
         }
-        while (array[right] > middle)
-        {
-            right--;
-        }
-        if (left <= right)
-        {
-            int temp = array[left];
-            array[left] = array[right];
-            array[right] = temp;
-            left++;
-            right--;
-        }
-    } while (left <= right);
-    return right;
+    }
+
+    temp = array[marker];
+    array[marker] = array[end];
+    array[end] = temp;
+    return marker;
 }
 
-void quickSort(int *array, int first, int last)
+void quickSort(int *array, int start, int end)
 {
-    if (first < last)
+    if (start >= end)
     {
-        // вынести отдельно
-        int pivot = partition(array, first, last);
-        quickSort(array, first, pivot);
-        quickSort(array, pivot - 1, last);
+        return;
     }
+    int pivot = partition(array, start, end);
+
+    quickSort(array, start, pivot - 1);
+    quickSort(array, pivot + 1, end);
 }
