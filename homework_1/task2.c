@@ -1,16 +1,14 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-
 int main()
 {
 	int dividend = 0;
 	int divisor = 0;
 	int quotient = 0;
-	int signOfAnswer = 0;
 
 	printf("The program finds the incomplete quotient\nEnter dividend = ");
-	scanf_s("%d",&dividend);
+	scanf_s("%d", &dividend);
 
 	while (divisor == 0)
 	{
@@ -22,31 +20,25 @@ int main()
 		}
 	}
 
-	if (divisor > 0 == dividend > 0)
+	int absDividend = abs(dividend);
+	int absDivisor = abs(divisor);
+
+	while (absDividend >= absDivisor)
 	{
-		signOfAnswer = 1;
-	}
-	else
-	{
-		signOfAnswer = -1;
+		absDividend -= absDivisor;
+		++quotient;
 	}
 
-
-	if (dividend < 0)
+	if (dividend < 0 && absDividend != 0)
 	{
 		++quotient;
 	}
 
-	dividend = abs(dividend);
-	divisor = abs(divisor);
-	while (dividend>= divisor)
+	if ((dividend < 0 && divisor > 0) || (dividend > 0 && divisor < 0))
 	{
-		dividend -= divisor;
-		++quotient;
+		quotient = -quotient;
 	}
-
-	printf("The incomplete quotient = %d\n", quotient * signOfAnswer);
+	printf("The incomplete quotient = %d\n", quotient);
 
 	return 0;
-	 
 }
