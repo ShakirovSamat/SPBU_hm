@@ -29,33 +29,17 @@ int showPhoneBook(char *path, Person *phoneBook, int amountOfPersons)
     return 0;
 }
 
-int addPerson(Person *phoneBook, int *amountOfPersons)
+int addPerson(Person *phoneBook, int *amountOfPersons, char name[], char number[])
 {
     if (phoneBook == NULL)
     {
         return -1;
     }
-    char name[20];
-    char number[20];
-    printf("\nEnter name: ");
-    fflush(stdin);
-    fgets(name, 20, stdin);
-    fflush(stdin);
-    printf("Enter number: ");
-    fgets(number, 20, stdin);
-    fflush(stdin);
-    printf("\n");
 
-    name[strlen(name) - 1] = '\0';
-    number[strlen(number) - 1] = '\0';
     Person newPerson;
     strcpy(newPerson.name, name);
     strcpy(newPerson.number, number);
     phoneBook[*amountOfPersons] = newPerson;
-    if (phoneBook[*amountOfPersons].name == NULL || phoneBook[*amountOfPersons].number == NULL)
-    {
-        return -1;
-    }
     ++(*amountOfPersons);
 
     return 0;
@@ -76,27 +60,20 @@ int savePersons(char *path, Person *phoneBook, int *amountOfPersons)
         fputs("\n", fl);
     }
     fclose(fl);
-    amountOfPersons = 0;
+    *amountOfPersons = 0;
     return 0;
 }
 
-int findNumberByName(char *path, Person *phoneBook, int amountOfPersons)
+int findNumberByName(char *path, Person *phoneBook, int amountOfPersons, char searchName[])
 {
     FILE *fl = fopen(path, "r");
     if (fl == NULL)
     {
         return -1;
     }
-    char searchName[20];
-    printf("Enter name: ");
-    printf("\n");
-    fflush(stdin);
-    fgets(searchName, 20, stdin);
-    fflush(stdin);
 
-    char name[20];
-    char number[20];
-    searchName[strlen(searchName) - 1] = '\0';
+    char name[20] = {0};
+    char number[20] = {0};
 
     while (fscanf(fl, "%s %s", name, number) != EOF)
     {
@@ -120,22 +97,16 @@ int findNumberByName(char *path, Person *phoneBook, int amountOfPersons)
     return 0;
 }
 
-int findNameByNumber(char *path, Person *phoneBook, int amountOfPersons)
+int findNameByNumber(char *path, Person *phoneBook, int amountOfPersons, char searchNumber[])
 {
     FILE *fl = fopen(path, "r");
     if (fl == NULL)
     {
         return -1;
     }
-    char searchNumber[20];
-    printf("Enter number: ");
-    fflush(stdin);
-    fgets(searchNumber, 20, stdin);
-    fflush(stdin);
 
-    char name[20];
-    char number[20];
-    searchNumber[strlen(searchNumber) - 1] = '\0';
+    char name[20] = {0};
+    char number[20] = {0};
 
     while (fscanf(fl, "%s %s", name, number) != EOF)
     {
