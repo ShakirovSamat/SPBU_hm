@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include <locale.h>
 #include <math.h>
+#include <stdbool.h>
 #include <stdlib.h>
 
 #define SIZE 16
@@ -13,28 +14,30 @@ void decToBin(int dec, int size, int *bin)
         dec /= 2;
     }
 }
-// Переработать или объяснить почему работает
 void addBin(int *bin1, int *bin2, int size, int *res)
 {
-    for (int i = size - 1; i >= 0; --i)
-    {
-        res[i] += bin1[i] + bin2[i];
-        if (res[i] >= 2 && i < size - 1)
-        {
-            res[i + 1] += 1;
-        }
-        res[i] %= 2;
-    }
-}
-// рассмотреть Round, лучше битовые оперцации
-int binToDec(int *bin, int size)
-{
-    float res = 0;
+    int transferBit = 0;
+    int extraSum = 0;
     for (int i = 0; i < size; ++i)
     {
-        res += bin[i] * pow(2.0, i);
+        extraSum = bin1[i] + bin2[i] + transferBit;
+        res[i] = extraSum & 1;
+        transferBit = extraSum >> 1;
     }
-    return (int)res;
+}
+
+int binToDec(int *bin, int size)
+{
+    int result = 0;
+    int power = 1;
+
+    for (int i = 0; i < size; ++i)
+    {
+        result += bin[i] * power;
+        power <<= 1;
+    }
+
+    return result;
 }
 
 void printBin(int *bin, int size)
@@ -46,7 +49,7 @@ void printBin(int *bin, int size)
     printf("\n");
 }
 
-int testSum()
+bool testSum()
 {
     int a = 0;
     int b = 0;
@@ -66,13 +69,13 @@ int testSum()
             free(bin1);
             free(bin2);
             free(res);
-            return -1;
+            return false;
         }
     }
     free(bin1);
     free(bin2);
     free(res);
-    return 0;
+    return true;
 }
 
 int main()
