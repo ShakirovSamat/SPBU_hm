@@ -1,38 +1,37 @@
 #include <stdio.h>
 
-#define range 20000
-#define ar_ln 100
+#define RANGE 20000
+#define MAX_LENGTH 100
 
-
-void bubbleSort(int ar[], int ln)
+void bubbleSort(int array[], int length)
 {
-    for (int i = 1; i < ln; ++i)
+    for (int i = 1; i < length; ++i)
     {
-        for (int j = 0; j < ln - i; ++j)
+        for (int j = 0; j < length - i; ++j)
         {
-            if (ar[j] > ar[j + 1]) 
+            if (array[j] > array[j + 1])
             {
-                int temp = ar[j + 1];
-                ar[j + 1] = ar[j];
-                ar[j] = temp;
-            } 
+                int temp = array[j + 1];
+                array[j + 1] = array[j];
+                array[j] = temp;
+            }
         }
     }
 }
 
-void countingSort(int ar[], int ln)
+void countingSort(int array[], int length)
 {
     int pos = 0;
-    int holder[range] = {0};
-    for (int i = 0; i < ln; ++i)
+    int holder[RANGE] = {0};
+    for (int i = 0; i < length; ++i)
     {
-        holder[ar[i] + range / 2] += 1;
+        ++holder[array[i] + RANGE / 2];
     }
-    for (int i = 0; i < range; ++i)
+    for (int i = 0; i < RANGE; ++i)
     {
         for (int j = 0; j < holder[i]; ++j)
         {
-            ar[pos] = i - range / 2;
+            array[pos] = i - RANGE / 2;
             pos++;
         }
     }
@@ -47,30 +46,28 @@ void arrOut(int ar[], int ln)
     printf("\n");
 }
 
-
 int main()
 {
-    int arrBubble[ar_ln] = {0};
-    int arrCounting[ar_ln] = {0};
-    int ln = 0;
-    while (ln <= 0 || ln > ar_ln)
+    int arrBubble[MAX_LENGTH] = {0};
+    int arrCounting[MAX_LENGTH] = {0};
+    int length = 0;
+    while (length <= 0 || length > MAX_LENGTH)
     {
-        printf("Max length is %d and num should be -10000 <= num <= 10000. Enter length = ", ar_ln);
-        scanf_s("%d", &ln);
+        printf("Max length of an array is %d and each array element should be between -10000 and 10000.\nEnter length = ", MAX_LENGTH);
+        scanf_s("%d", &length);
     }
-    for (int i = 0; i < ln; ++i)
+    for (int i = 0; i < length; ++i)
     {
-        printf("Enter %d number = ", i + 1);
+        printf("Enter number №%d= ", i + 1);
         scanf("%d", &arrBubble[i]);
         arrCounting[i] = arrBubble[i];
     }
 
-    bubbleSort(arrBubble, ln);
-    arrOut(arrBubble, ln);
+    bubbleSort(arrBubble, length);
+    arrOut(arrBubble, length);
 
-    countingSort(arrCounting, ln);
-    arrOut(arrCounting, ln);
-
+    countingSort(arrCounting, length);
+    arrOut(arrCounting, length);
 
     return 0;
 }
