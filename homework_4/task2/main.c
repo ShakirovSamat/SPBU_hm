@@ -32,6 +32,12 @@ int main()
 
     int length = 0;
     fscanf(file, "%d", &length);
+    if (length <= 0)
+    {
+        printf("Wrong length of the array");
+        fclose(file);
+        return -1;
+    }
     int *array = (int *)calloc(length, sizeof(int));
 
     for (int i = 0; i < length; ++i)
@@ -41,10 +47,10 @@ int main()
 
     quickSort(array, 0, length - 1);
 
-    int mostCommon = 0;
+    int mostCommon = array[0];
     int max = 1;
     int counter = 1;
-    for (int i = 1; i < 30; i++)
+    for (int i = 1; i < length; i++)
     {
         if (array[i - 1] == array[i])
         {
@@ -59,5 +65,6 @@ int main()
     }
     printf("Most common number is %d. It appears %d times", mostCommon, max);
     printf("\n");
+    fclose(file);
     return 0;
 }

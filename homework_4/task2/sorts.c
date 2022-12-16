@@ -1,7 +1,7 @@
 
 int partition(int *array, int start, int end)
 {
-    int temp;
+    int temp = 0;
     int marker = start;
     for (int i = start; i < end; i++)
     {
