@@ -1,47 +1,54 @@
 #include <stdio.h>
 #include <stdlib.h>
+#include <time.h>
 
-#define len 15
+#define LENGTH 15
 
-void sort(int ar[], int ln)
+void swap(int *a, int *b)
 {
-	int point = ar[0];
+	int temp = *a;
+	*a = *b;
+	*b = temp;
+}
+
+void partition(int array[], int length)
+{
+	int point = array[0];
 	int left = 0;
-	int right = ln - 1;
+	int right = length - 1;
 	do
 	{
-		while (ar[left] < point)
+		while (array[left] < point)
 		{
 			left++;
 		}
-		while (ar[right] > point)
+		while (array[right] >= point)
 		{
 			right--;
 		}
 		if (left <= right)
 		{
-			int temp = ar[left];
-			ar[left] = ar[right];
-			ar[right] = temp;
+			swap(array[left], array[right]);
 			left++;
 			right--;
 		}
 	} while (left <= right);
-
 }
+
 int main()
 {
-	int arr[len] = { 0 };
-	for (int i = 0; i < len; ++i)
+	srand(time(0));
+	int array[LENGTH] = {0};
+	for (int i = 0; i < LENGTH; ++i)
 	{
-		arr[i] = rand();
+		array[i] = rand();
 	}
-	printf("%d \n", arr[0]);
-	sort(arr, len);
+	printf("Separating element: %d \n", array[0]);
+	partition(array, LENGTH);
 
-	for (int i = 0; i < len; ++i)
+	for (int i = 0; i < LENGTH; ++i)
 	{
-		printf("%d ", arr[i]);
+		printf("%d ", array[i]);
 	}
 
 	return 0;
