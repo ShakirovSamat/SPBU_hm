@@ -5,8 +5,7 @@
 
 typedef struct Stack Stack;
 
-
-Stack * createStack();
+Stack *createStack();
 
 int pushStack(Stack *stack, int value);
 

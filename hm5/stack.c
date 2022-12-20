@@ -8,20 +8,17 @@ typedef struct StackElement
 {
     int value;
     struct StackElement *next;
-}StackElement;
-
+} StackElement;
 
 typedef struct Stack
 {
     StackElement *top;
-}Stack;
+} Stack;
 
-
-Stack * createStack()
+Stack *createStack()
 {
     return calloc(1, sizeof(Stack));
 }
-
 
 int pushStack(Stack *stack, int value)
 {
@@ -30,18 +27,18 @@ int pushStack(Stack *stack, int value)
         return -1;
     }
 
-    StackElement *newEleemnt = calloc(1, sizeof(StackElement));
-    newEleemnt->value = value;
+    StackElement *newElement = calloc(1, sizeof(StackElement));
+    // Проверить выделение памяти
+    newElement->value = value;
 
     if (stack->top == NULL)
     {
-        stack->top = calloc(1, sizeof(StackElement));
-        stack->top = newEleemnt;
+        stack->top = newElement;
         return 0;
     }
 
-    newEleemnt->next = stack->top;
-    stack->top = newEleemnt;
+    newElement->next = stack->top;
+    stack->top = newElement;
     return 0;
 }
 
@@ -53,7 +50,10 @@ int popStack(Stack *stack, int *res)
     }
 
     *res = stack->top->value;
+    StackElement *elementToFree = stack->top;
     stack->top = stack->top->next;
+    free(elementToFree);
+
     return 0;
 }
 
@@ -64,8 +64,7 @@ int deleteStack(Stack *stack)
         return -1;
     }
 
-    StackElement *curElement = calloc(1, sizeof(StackElement));
-    curElement = stack->top;
+    StackElement *curElement = stack->top;
 
     while (curElement != NULL)
     {
@@ -77,9 +76,13 @@ int deleteStack(Stack *stack)
     free(stack);
     return 0;
 }
-
+// Разобраться с Null случаем
 bool isEmptyStack(Stack *stack)
 {
+    if (stack == NULL)
+    {
+        return true;
+    }
+
     return stack->top == NULL;
 }
-
