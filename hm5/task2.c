@@ -2,49 +2,51 @@
 #include <stdbool.h>
 #include "stack.h"
 
-bool isCorrectString(char str[])
+bool isCorrectString(char string[])
 {
     Stack *stack = createStack();
+    // Проверить на память
+    // Возвращать конкретный код ошибки
+    // Добавить проверки пуш и поп
     int a = 0;
-    for(int i = 0; str[i] != '\0'; ++i)
+    for (int i = 0; string[i] != '\0'; ++i)
     {
-        int prevSign = 0;
-        switch (str[i])
+        int previousBracket = 0;
+        switch (string[i])
         {
-            case '(':
-            case '{':
-            case '[':
-                pushStack(stack, (int)str[i]);
-                break;
-            case ')':
-                popStack(stack, &prevSign);
-                if (prevSign != '(' || isEmptyStack(stack) && prevSign == 0)
-                {
-                    printf("%c", prevSign);
-                    return false;
-                }
-                break;
-            case '}':
-                popStack(stack, &prevSign);
-                if (prevSign != '{' || isEmptyStack(stack) && prevSign == 0)
-                {
-                    return false;
-                }
-                break;
-            case ']':
-                popStack(stack, &prevSign);
-                if (prevSign != '[' || isEmptyStack(stack) && prevSign == 0)
-                {
-                    return false;
-                }
-                break;
-            default:
-                break;
+        case '(':
+        case '{':
+        case '[':
+            pushStack(stack, (int)string[i]);
+            break;
+        case ')':
+            popStack(stack, &previousBracket);
+            if (previousBracket != '(' || isEmptyStack(stack) && previousBracket == 0)
+            {
+                printf("%c", previousBracket);
+                return false;
+            }
+            break;
+        case '}':
+            popStack(stack, &previousBracket);
+            if (previousBracket != '{' || isEmptyStack(stack) && previousBracket == 0)
+            {
+                return false;
+            }
+            break;
+        case ']':
+            popStack(stack, &previousBracket);
+            if (previousBracket != '[' || isEmptyStack(stack) && previousBracket == 0)
+            {
+                return false;
+            }
+            break;
         }
     }
     return isEmptyStack(stack);
 }
 
+// Добавить разные случаи
 bool test()
 {
     char strings[4][7] = {"(){}[]", "((()))", "({[})]", "({})[]"};
@@ -70,15 +72,16 @@ bool test()
 
 int main()
 {
-    if(!test())
+    if (!test())
     {
         printf("Error in isCorrectString function");
-        return-1;
+        return -1;
     }
-    char str[101];
+    char str[101] = {0};
     printf("Enter your string. Max lenght is 100 signs: ");
-    scanf_s("%s", str);
+    scanf_s("%100s", str);
 
+    // Добавить почему строка неправильная
     if (isCorrectString(str))
     {
         printf("String is correct");
