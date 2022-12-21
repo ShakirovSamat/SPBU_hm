@@ -1,66 +1,95 @@
 #include <stdio.h>
+#include <stdio.h>
+#include <stdlib.h>
 
-
-void insertSort(int ar[], int ln, int st)
+void insertSort(int array[], int length, int start)
 {
-    for(int i = st; i < st + ln; ++i)
+    for (int i = start; i < start + length; ++i)
     {
-        int key = ar[i];
+        int key = array[i];
         int j = i - 1;
-        while (j >= 0 && ar[j] > key)
+        while (j >= 0 && array[j] > key)
         {
-            ar[j + 1] = ar[j];
+            array[j + 1] = array[j];
             --j;
         }
-        ar[j + 1] = key;
+        array[j + 1] = key;
     }
 }
 
-void quickSort(int *ar, int first, int last)
+int partition(int *array, int start, int end)
 {
-    if (last - first > 9){
-        int left = first;
-        int right = last;
-        int middle = ar[(first + last) / 2];
-        do
+    int temp = 0;
+    int marker = start;
+    for (int i = start; i < end; i++)
+    {
+        if (array[i] < array[end])
         {
-            while (ar[left] < middle)
-            {
-                left++;
-            }
-            while (ar[right] > middle)
-            {
-                right--;
-            }
-            if (left <= right)
-            {
-                int temp = ar[left];
-                ar[left] = ar[right];
-                ar[right] = temp;
-                left++;
-                right--;
-            }
-        } while (left <= right);
-        quickSort(ar, first, right);
-        quickSort(ar, left, last);
+            temp = array[marker];
+            array[marker] = array[i];
+            array[i] = temp;
+            marker += 1;
+        }
     }
-    else{
-        insertSort(ar, last - first + 1, first);
-    }
-   
+
+    temp = array[marker];
+    array[marker] = array[end];
+    array[end] = temp;
+    return marker;
 }
 
+void quickSort(int *array, int start, int end)
+{
+    if (end - start > 9)
+    {
+        if (start >= end)
+        {
+            return;
+        }
+        int pivot = partition(array, start, end);
 
+        quickSort(array, start, pivot - 1);
+        quickSort(array, pivot + 1, end);
+    }
+    else
+    {
+        insertSort(array, end - start + 1, start);
+    }
+}
 
 int main()
 {
-    int arr[30] = {1, 2, 3, 9 ,8 ,7 , 4, 5, 6 , 10, 11, 20, 19 , 18, 12, 13, 17 ,16, 14, 15, 103, 41, 124, 413, 44, 43, 31, 15, 553, 22};
-
-    quickSort(arr, 0, 29);
-    for(int i = 0; i < 30; ++i)
+    int length = 0;
+    printf("Enter the length of the array: ");
+    scanf("%d", &length);
+    if (length <= 0)
     {
-        printf("%d ", arr[i]);
+        printf("Wrong input: length should be positive");
+        return -1;
     }
+
+    int *array = calloc(length, sizeof(int));
+    if (array == NULL)
+    {
+        printf("Memory error");
+        return -1;
+    }
+
+    printf("Enter numbers:\n");
+    for (int i = 0; i < length; ++i)
+    {
+        printf("%d: ", i + 1);
+        scanf("%d", &array[i]);
+    }
+
+    quickSort(array, 0, length - 1);
+
+    printf("Sorted array: ");
+    for (int i = 0; i < length; ++i)
+    {
+        printf("%d ", array[i]);
+    }
+    printf("\n\n");
 
     return 0;
 }
