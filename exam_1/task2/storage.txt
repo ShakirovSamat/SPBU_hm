@@ -1,0 +1,9 @@
+ball 100
+icecream 20
+apple 2
+car 10000
+computer 1000
+beer 30
+evergreen 350
+t-shirt 200
+pistol 200
