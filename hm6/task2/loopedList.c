@@ -5,29 +5,32 @@
 
 typedef int Error;
 
-typedef struct Node{
+typedef struct Node
+{
     int value;
     struct Node *next;
-}Node;
+} Node;
 
-typedef struct LoopedList{
+typedef struct LoopedList
+{
     Node *head;
     Node *tail;
-}LoopedList;
+} LoopedList;
 
 LoopedList *create()
 {
     return calloc(1, sizeof(LoopedList));
 }
 
-Error append(LoopedList *list, int value)
+Error add(LoopedList *list, int value)
 {
     if (list == NULL)
     {
         return -1;
     }
 
-    Node *newNode = calloc(1 , sizeof(Node));
+    Node *newNode = calloc(1, sizeof(Node));
+    // Проверить память
     newNode->value = value;
 
     if (list->head == NULL)
@@ -43,7 +46,7 @@ Error append(LoopedList *list, int value)
     list->tail = newNode;
     return 0;
 }
-
+// Синхронизировать индексы в функциях
 int get(LoopedList *list, int index)
 {
     if (list == NULL)
@@ -70,40 +73,37 @@ Error delete(LoopedList *list, int index)
         return -1;
     }
 
-    int length = getLen(list);
-
     if (index < 1)
     {
         return -1;
-    }         
-
-    Node *curNode = list->head;  
-    Node *prevNode = NULL;
-
-    int i = 0;
-    
-
-    while (i < index)
-    { 
-        prevNode = curNode;
-        curNode = curNode->next;
-        ++i;
-    } 
-
+    }
 
     if (index == 1)
     {
+        Node *tmp = list->head;
         list->tail->next = list->head->next;
         list->head = list->tail;
-    }
-    else
-    {
-        list->head = curNode->next;
-        list->tail = prevNode;
-        list->tail->next = list->head;
+        free(tmp);
+        return 0;
     }
 
+    Node *curNode = list->head;
+    Node *prevNode = NULL;
+
+    int i = 0;
+    while (i < index)
+    {
+        prevNode = curNode;
+        curNode = curNode->next;
+        ++i;
+    }
+
+    list->head = curNode->next;
+    list->tail = prevNode;
+    list->tail->next = list->head;
+
     free(curNode);
+    return 0;
 }
 
 int getLen(LoopedList *list)
@@ -140,7 +140,7 @@ Error printList(LoopedList *list)
     {
         return 0;
     }
-    while(curNode != list->tail)
+    while (curNode != list->tail)
     {
         printf("%d ", curNode->value);
         curNode = curNode->next;
@@ -149,4 +149,3 @@ Error printList(LoopedList *list)
     printf("%d", curNode->value);
     return 0;
 }
-
