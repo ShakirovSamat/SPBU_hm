@@ -48,10 +48,10 @@ int main()
         return 0;
     }
     printf("\n");
-
+    char c = 0;
     for (;; size++)
     {
-        if (size == 1000 || fscanf(file, "%s %d", products[size].name, &products[size].cost) == EOF)
+        if (size == 1000 || fscanf(file, "%s %c %d", products[size].name, &c, &products[size].cost) == EOF)
         {
             break;
         }
