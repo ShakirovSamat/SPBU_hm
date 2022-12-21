@@ -2,6 +2,9 @@
 #include <stdbool.h>
 #include <stddef.h>
 #include <stdlib.h>
+#include "stack.h"
+
+#define STRING_LENGTH 100
 
 int add(int a, int b) { return a + b; }
 
@@ -90,7 +93,7 @@ int calculatePolishNotaion(char polishNotaion[], int *result)
             }
         }
     }
-
+    // разобрать коварные случаи
     if (isEmptyStack(stack) == 0)
     {
         popStack(stack, result);
@@ -102,11 +105,11 @@ int calculatePolishNotaion(char polishNotaion[], int *result)
         else
         {
             deleteStack(stack);
-            return -1;
+            return -4;
         }
     }
     deleteStack(stack);
-    return -1;
+    return -4;
 }
 
 int test()
@@ -147,9 +150,9 @@ int test()
     return 0;
 }
 
-int main()
+void printErrorMessage(int error)
 {
-    switch (test())
+    switch (error)
     {
     case -1:
         printf("Memory error has occured");
@@ -164,29 +167,23 @@ int main()
         printf("Bad input get through function without errors");
         break;
     }
+}
 
-    char inputString[101] = {0};
+int main()
+{
+    printErrorMessage(test());
 
-    printf("Enter reverse polish notation.Max length is 100: ");
-    fgets(inputString, 101, stdin);
+    char inputString[STRING_LENGTH + 1] = {0};
+
+    printf("Enter reverse polish notation.\nMax length is %d: ", STRING_LENGTH);
+    fgets(inputString, STRING_LENGTH + 1, stdin);
 
     int result = 0;
     int error = calculatePolishNotaion(inputString, &result);
 
     if (error != 0)
     {
-        switch (error)
-        {
-        case -1:
-            printf("Memory error has occured");
-            break;
-        case -2:
-            printf("Pop error has occured");
-            break;
-        case -3:
-            printf("Dividing by zero error has occured");
-            break;
-        }
+        printErrorMessage(error);
     }
     else
     {
