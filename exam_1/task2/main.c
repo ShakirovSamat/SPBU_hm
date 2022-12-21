@@ -3,7 +3,7 @@
 
 typedef struct Product
 {
-    int cost;
+    int amount;
     char name[100];
 } Product;
 
@@ -13,7 +13,7 @@ void bubbleSort(Product *prodcts, int size, char *iterator)
     {
         for (int j = (size - 1); j > i; j--)
         {
-            if (prodcts[j - 1].cost > prodcts[j].cost && strcmp(iterator, "cost") == 0 || strcmp(prodcts[j - 1].name, prodcts[j].name) < 0 && strcmp(iterator, "name") == 0)
+            if (prodcts[j - 1].amount > prodcts[j].amount && strcmp(iterator, "amount") == 0 || strcmp(prodcts[j - 1].name, prodcts[j].name) < 0 && strcmp(iterator, "name") == 0)
             {
                 Product temp = prodcts[j - 1];
                 prodcts[j - 1] = prodcts[j];
@@ -51,7 +51,7 @@ int main()
     char c = 0;
     for (;; size++)
     {
-        if (size == 1000 || fscanf(file, "%s %c %d", products[size].name, &c, &products[size].cost) == EOF)
+        if (size == 1000 || fscanf(file, "%s %c %d", products[size].name, &c, &products[size].amount) == EOF)
         {
             break;
         }
@@ -61,11 +61,11 @@ int main()
         printf("Wrong input: amount of products less than sum of products with 50%% discount and 25%% discount\n");
         return -1;
     }
-    bubbleSort(products, size, "cost");
+    bubbleSort(products, size, "amount");
     printf("Products with 50%% discount:\n");
     for (int i = size - 1; i >= (size - products50); --i)
     {
-        printf("%s - %d\n", products[i].name, products[i].cost);
+        printf("%s - %d\n", products[i].name, products[i].amount);
     }
     printf("\n");
 
@@ -73,7 +73,7 @@ int main()
     printf("Products with 25%% discount:\n");
     for (int i = size - products50 - 1; i >= (size - products50 - products25); --i)
     {
-        printf("%s - %d\n", products[i].name, products[i].cost);
+        printf("%s - %d\n", products[i].name, products[i].amount);
     }
     printf("\n");
 
