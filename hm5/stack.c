@@ -29,6 +29,10 @@ int pushStack(Stack *stack, int value)
 
     StackElement *newElement = calloc(1, sizeof(StackElement));
     // Проверить выделение памяти
+    if (newElement == NULL)
+    {
+        return -1;
+    }
     newElement->value = value;
 
     if (stack->top == NULL)
@@ -47,6 +51,10 @@ int popStack(Stack *stack, int *res)
     if (stack == NULL)
     {
         return -1;
+    }
+    if (stack->top == NULL)
+    {
+        return -2;
     }
 
     *res = stack->top->value;

@@ -1,4 +1,3 @@
-#include "stack.h"
 #include <stdio.h>
 #include <stdbool.h>
 #include <stddef.h>
@@ -29,6 +28,10 @@ int pushStack(Stack *stack, int value)
 
     StackElement *newElement = calloc(1, sizeof(StackElement));
     // Проверить выделение памяти
+    if (newElement == NULL)
+    {
+        return -1;
+    }
     newElement->value = value;
 
     if (stack->top == NULL)
@@ -48,7 +51,10 @@ int popStack(Stack *stack, int *res)
     {
         return -1;
     }
-
+    if (stack->top == NULL)
+    {
+        return -2;
+    }
     *res = stack->top->value;
     StackElement *elementToFree = stack->top;
     stack->top = stack->top->next;
@@ -77,101 +83,206 @@ int deleteStack(Stack *stack)
     return 0;
 }
 // Разобраться с Null случаем
-bool isEmptyStack(Stack *stack)
+int isEmptyStack(Stack *stack)
 {
     if (stack == NULL)
     {
-        return true;
+        return -2;
     }
 
-    return stack->top == NULL;
+    if (stack->top == NULL)
+    {
+        return -1;
+    }
+    return 0;
 }
 
-int calculatePolishNotaion(char polishNotaion[])
+int add(int a, int b) { return a + b; }
+
+int substract(int a, int b) { return a - b; }
+
+int multiply(int a, int b) { return a * b; }
+
+int divide(int a, int b) { return a / b; }
+
+int makeArithmeticOperation(Stack *stack, char operation, int *res)
+{
+    int firstOperand = 0;
+    int secondOperand = 0;
+
+    int popError = popStack(stack, &secondOperand);
+    if (popError != 0)
+    {
+        return popError;
+    }
+
+    popError = popStack(stack, &firstOperand);
+    if (popError != 0)
+    {
+        return popError;
+    }
+
+    switch (operation)
+    {
+    case '+':
+        *res = add(firstOperand, secondOperand);
+        break;
+    case '-':
+        *res = substract(firstOperand, secondOperand);
+        break;
+    case '*':
+        *res = multiply(firstOperand, secondOperand);
+        break;
+    case '/':
+        if (secondOperand == 0)
+        {
+            return -3;
+        }
+        *res = divide(firstOperand, secondOperand);
+        break;
+
+    default:
+        break;
+    }
+    return 0;
+}
+
+bool isArithmeticSign(char c)
+{
+    return (c == '+' || c == '-' || c == '*' || c == '/');
+}
+
+int calculatePolishNotaion(char polishNotaion[], int *result)
 {
     Stack *stack = createStack();
-    // Проверить на null
+    if (stack == NULL)
+    {
+        return -1;
+    }
     // Арифметические исключения + вынести в функцию арифметические опреации
     for (int i = 0; polishNotaion[i] != '\0'; ++i)
     {
-        int b = 0;
-        int a = 0;
-        switch (polishNotaion[i])
+        if (isArithmeticSign(polishNotaion[i]))
         {
-        case '+':
-            popStack(stack, &a);
-            popStack(stack, &b);
-            pushStack(stack, a + b);
-            break;
-        case '-':
-            popStack(stack, &a);
-            popStack(stack, &b);
-            pushStack(stack, b - a);
-            break;
-        case '*':
-            popStack(stack, &a);
-            popStack(stack, &b);
-            pushStack(stack, a * b);
-            break;
-        case '/':
-            popStack(stack, &a);
-            popStack(stack, &b);
-            pushStack(stack, b / a);
-            break;
-        default:
-            // Разобраться с пробелами и другими символами
-            pushStack(stack, (int)polishNotaion[i] - 48);
-            break;
+            int result = 0;
+            int error = makeArithmeticOperation(stack, polishNotaion[i], &result);
+            if (error != 0)
+            {
+                return error;
+            }
+            error = pushStack(stack, result);
+            if (error != 0)
+            {
+                return error;
+            }
+        }
+        else
+        {
+            if ('0' <= (int)polishNotaion[i] && (int)polishNotaion[i] <= '9')
+            {
+                pushStack(stack, (int)(int)polishNotaion[i] - 48);
+            }
         }
     }
-    int res = 0;
-    popStack(stack, &res);
+
+    if (isEmptyStack(stack) == 0)
+    {
+        popStack(stack, result);
+        if (isEmptyStack(stack) != 0)
+        {
+            deleteStack(stack);
+            return 0;
+        }
+        else
+        {
+            deleteStack(stack);
+            return -1;
+        }
+    }
     // Добавить проверки: пустой стек после снятия и непустой стек до снятия
     deleteStack(stack);
-    return res;
+    return -1;
 }
 // Доработать тест
-bool test()
+int test()
 {
-    int res = 0;
-    char strings[4][4] = {"56+", "97-", "65*", "82/"};
-    res = calculatePolishNotaion(strings[0]);
-    if (res != 11)
+    int result = 0;
+    char strings[6][4] = {"56+", "97-", "65*", "82/", "ab/", "57L"};
+    int error = calculatePolishNotaion(strings[0], &result);
+    if (result != 11 || error != 0)
     {
-        return false;
+        return error;
     }
-    res = calculatePolishNotaion(strings[1]);
-    if (res != 2)
+    error = calculatePolishNotaion(strings[1], &result);
+    if (result != 2 || error != 0)
     {
-        return false;
+        return error;
     }
-    res = calculatePolishNotaion(strings[2]);
-    if (res != 30)
+    error = calculatePolishNotaion(strings[2], &result);
+    if (result != 30 || error != 0)
     {
-        return false;
+        return error;
     }
-    res = calculatePolishNotaion(strings[3]);
-    if (res != 4)
+    error = calculatePolishNotaion(strings[3], &result);
+    if (result != 4 || error != 0)
     {
-        return false;
+        return error;
+    }
+    error = calculatePolishNotaion(strings[5], &result);
+    if (error == 0)
+    {
+        return -4;
+    }
+    error = calculatePolishNotaion(strings[6], &result);
+    if (error == 0)
+    {
+        return -4;
     }
 
-    return true;
+    return 0;
 }
 
 int main()
 {
-    if (!test())
+    switch (test())
     {
-        printf("Error in calculatePolishNotation function");
-        return -1;
+    case -1:
+        printf("Memory error has occured");
+        break;
+    case -2:
+        printf("Pop has occured");
+        break;
+    case -3:
+        printf("Dividing by zero");
+        break;
+    case -4:
+        printf("Bad input get through function without errors");
+        break;
     }
     char inputString[101] = {0};
     printf("Enter reverse polish notation.Max length is 100: ");
     scanf_s("%100s", inputString);
-    // Улучшить  вывод
-    int res = calculatePolishNotaion(inputString);
-    printf("%d\n", res);
+    int result = 0;
+    int error = calculatePolishNotaion(inputString, &result);
+    if (error != 0)
+    {
+        switch (error)
+        {
+        case -1:
+            printf("Memory error has occured");
+            break;
+        case -2:
+            printf("Pop has occured");
+            break;
+        case -3:
+            printf("Dividing by zero");
+            break;
+        }
+    }
+    else
+    {
+        printf("Calculated polish notation equals: %d\n", result);
+    }
 
     return 0;
 }
