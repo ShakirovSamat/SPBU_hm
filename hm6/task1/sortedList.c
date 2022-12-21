@@ -8,14 +8,14 @@ typedef struct Node
 {
     int value;
     struct Node *next;
-}Node;
+} Node;
 
 typedef struct SortedList
 {
     Node *head;
-}SortedList;
+} SortedList;
 
-SortedList * createSortedList()
+SortedList *createSortedList()
 {
     return calloc(1, sizeof(SortedList));
 }
@@ -28,10 +28,12 @@ int addValue(SortedList *sortedList, int value)
     }
 
     Node *newNode = calloc(1, sizeof(Node));
+    // Проверить память
     newNode->value = value;
-    
+
     Node *prevNode = NULL;
     Node *curNode = sortedList->head;
+    // Сокращения убрать
 
     if (sortedList->head == NULL)
     {
@@ -97,7 +99,7 @@ int printList(SortedList *sortedList)
 {
     if (sortedList == NULL)
     {
-        return -1;
+        return MemoryError;
     }
     Node *curNode = sortedList->head;
     while (curNode != NULL)
@@ -105,17 +107,22 @@ int printList(SortedList *sortedList)
         printf("%d ", curNode->value);
         curNode = curNode->next;
     }
-    return 0;
+    return OK;
 }
 
 bool sortedListTest()
 {
     SortedList *list = createSortedList();
-    addValue(list, 1);
-    addValue(list, 5);
-    addValue(list, 2);
-    addValue(list, 7);
-    deleteValue(list, 5);
+    int error = 0;
+    error -= addValue(list, 1);
+    error -= addValue(list, 5);
+    error -= addValue(list, 2);
+    error -= addValue(list, 7);
+    error -= deleteValue(list, 5);
+    if (error != 0)
+    {
+        return false;
+    }
     if (list->head->value != 1)
     {
         return false;
@@ -125,6 +132,10 @@ bool sortedListTest()
         return false;
     }
     if (list->head->next->next->value != 7)
+    {
+        return false;
+    }
+    if (list->head->next->next->next != NULL)
     {
         return false;
     }
