@@ -33,6 +33,10 @@ bool isPhoneNumber(char *string)
 char *cutWordFromString(char *string, int start, int end)
 {
     char *word = calloc(end - start + 1, sizeof(char));
+    if (word == NULL)
+    {
+        return NULL;
+    }
     for (int i = 0; i < end - start; ++i)
     {
         word[i] = string[start + i];
@@ -64,6 +68,10 @@ int main()
                     ++end;
                 }
                 char *potentialNumber = cutWordFromString(string, b, end);
+                if (potentialNumber == NULL)
+                {
+                    return -1;
+                }
                 if (isPhoneNumber(potentialNumber))
                 {
                     printf("%d: %s\n", i + 1, potentialNumber);
