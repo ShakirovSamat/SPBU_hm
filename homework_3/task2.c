@@ -1,5 +1,6 @@
 #include <stdio.h>
 #include <stdlib.h>
+#include <time.h>
 #include "quickSort.h"
 
 int binSearch(int *array, int length, int target)
