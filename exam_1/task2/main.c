@@ -27,6 +27,11 @@ int main()
 {
     Product products[1000] = {0};
     FILE *file = fopen("storage.txt", "r");
+    if (file == NULL)
+    {
+        printf("File did not open");
+        return -1;
+    }
     int size = 0;
 
     int products50 = 0;
@@ -49,13 +54,15 @@ int main()
     }
     printf("\n");
     char c = 0;
-    for (;; size++)
+    for (; size < 1000; size++)
     {
-        if (size == 1000 || fscanf(file, "%s %c %d", products[size].name, &c, &products[size].amount) == EOF)
+        if (fscanf(file, "%s %c %d", products[size].name, &c, &products[size].amount) == EOF)
         {
             break;
         }
     }
+    fclose(file);
+
     if (products25 + products50 > size)
     {
         printf("Wrong input: amount of products less than sum of products with 50%% discount and 25%% discount\n");
