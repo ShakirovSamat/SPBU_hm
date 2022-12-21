@@ -29,7 +29,7 @@ int main()
     FILE *file = fopen("storage.txt", "r");
     if (file == NULL)
     {
-        printf("File did not open");
+        printf("File were not open");
         return -1;
     }
     int size = 0;
