@@ -1,87 +1,79 @@
 #include <stdio.h>
 #include <stdlib.h>
-#define arrLn 1000
-void quickSort(int *ar, int first, int last)
-{
-    if (first < last)
-    {
-        int left = first;
-        int right = last;
-        int middle = ar[(first + last) / 2];
-        do
-        {
-            while (ar[left] < middle)
-            {
-                left++;
-            }
-            while (ar[right] > middle)
-            {
-                right--;
-            }
-            if (left <= right)
-            {
-                int temp = ar[left];
-                ar[left] = ar[right];
-                ar[right] = temp;
-                left++;
-                right--;
-            }
-        } while (left <= right);
+#include "quickSort.h"
 
-        quickSort(ar, first, right);
-        quickSort(ar, left, last);
-    }
-}
-
-int binSearch(int *ar, int ln, int target)
+int binSearch(int *array, int length, int target)
 {
     int left = -1;
-    int right = ln;
+    int right = length;
     while (left < right - 1)
     {
-        int mid = (left + right) / 2;
-        if (ar[mid] > target)
+        int middle = (left + right) / 2;
+        if (array[middle] > target)
         {
-           right = mid;
+            right = middle;
         }
         else
         {
-            left = mid;
+            left = middle;
         }
     }
-    return ar[left] == target;
+
+    if (left == -1)
+    {
+        return array[0] == target;
+    }
+
+    return array[left] == target;
 }
 
 int main()
 {
-    int ln = 0;
-    int numbers = 0;
-    int array[arrLn] = {0};
-    
-    printf("Enter k = ");
-    scanf("%d", &numbers);
-    printf("Enter m <= 1000 = ");
-    scanf("%d", &ln);
+    srand(time(NULL));
 
-    for(int i = 0; i < ln; i++)
+    int length = 0;
+    printf("Enter the length of the array: ");
+    scanf("%d", &length);
+    if (length <= 0)
+    {
+        printf("Wrong input: the length should be positive");
+        return -1;
+    }
+
+    int amountOfRandomNumbers = 0;
+    printf("Enter amount of the random numbers: ");
+    scanf("%d", &amountOfRandomNumbers);
+    if (amountOfRandomNumbers <= 0)
+    {
+        printf("Wrong input: amount of the random numbers should be positive");
+        return -1;
+    }
+
+    int *array = calloc(length, sizeof(int));
+    if (array == NULL)
+    {
+        printf("Memory error");
+        return -1;
+    }
+
+    for (int i = 0; i < length; i++)
     {
         array[i] = rand();
     }
 
-    quickSort(array, 0, ln - 1);
+    quickSort(array, 0, length - 1);
 
-    for(int i = 0; i < numbers; i++)
+    for (int i = 0; i < amountOfRandomNumbers; i++)
     {
         int target = rand();
-        if (binSearch(array, ln, target))
+        if (binSearch(array, length, target))
         {
             printf("%d was found in array\n", target);
         }
-        else{
+        else
+        {
             printf("%d wasn't found in array\n", target);
         }
-        
-        
     }
     return 0;
 }
