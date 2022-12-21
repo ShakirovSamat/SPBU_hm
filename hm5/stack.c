@@ -28,7 +28,6 @@ int pushStack(Stack *stack, int value)
     }
 
     StackElement *newElement = calloc(1, sizeof(StackElement));
-    // Проверить выделение памяти
     if (newElement == NULL)
     {
         return -1;
@@ -56,7 +55,6 @@ int popStack(Stack *stack, int *res)
     {
         return -2;
     }
-
     *res = stack->top->value;
     StackElement *elementToFree = stack->top;
     stack->top = stack->top->next;
@@ -84,13 +82,17 @@ int deleteStack(Stack *stack)
     free(stack);
     return 0;
 }
-// Разобраться с Null случаем
-bool isEmptyStack(Stack *stack)
+
+int isEmptyStack(Stack *stack)
 {
     if (stack == NULL)
     {
-        return true;
+        return -1;
     }
 
-    return stack->top == NULL;
+    if (stack->top == NULL)
+    {
+        return -2;
+    }
+    return 0;
 }

@@ -13,6 +13,6 @@ int popStack(Stack *stack, int *res);
 
 int deleteStack(Stack *stack);
 
-bool isEmptyStack(Stack *stack);
+int isEmptyStack(Stack *stack);
 
 #endif // CORE_H_INCLUDED
