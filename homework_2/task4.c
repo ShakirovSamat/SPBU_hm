@@ -14,7 +14,7 @@ void swap(int *a, int *b)
 void partition(int array[], int length)
 {
 	int point = array[0];
-	int left = 0;
+	int left = 1;
 	int right = length - 1;
 	do
 	{
@@ -28,11 +28,19 @@ void partition(int array[], int length)
 		}
 		if (left <= right)
 		{
-			swap(array[left], array[right]);
+			int temp = array[left];
+			array[left] = array[right];
+			array[right] = temp;
 			left++;
 			right--;
 		}
 	} while (left <= right);
+	int i = 0;
+	while (array[0] >= array[i])
+	{
+		++i;
+	}
+	swap(&array[0], &array[i - 1]);
 }
 
 int main()
