@@ -1,56 +1,57 @@
 #include <stdio.h>
+#include <stdlib.h>
+#include "quickSort.h"
 
-void quickSort(int *ar, int first, int last)
+int mostCommon(int array[], int length)
 {
-    if (first < last)
-    {
-        int left = first;
-        int right = last;
-        int middle = ar[(first + last) / 2];
-        do
-        {
-            while (ar[left] < middle)
-            {
-                left++;
-            }
-            while (ar[right] > middle)
-            {
-                right--;
-            }
-            if (left <= right)
-            {
-                int temp = ar[left];
-                ar[left] = ar[right];
-                ar[right] = temp;
-                left++;
-                right--;
-            }
-        } while (left <= right);
-
-        quickSort(ar, first, right);
-        quickSort(ar, left, last);
-    }
-}
-int main()
-{
-    int arr[30] = {1, 2, 3, 7 ,8 ,7 , 4, 5, 6 , 10, 11, 20, 19 , 18, 12, 13, 7 ,16, 14, 15, 7, 41, 15, 413, 44, 43, 31, 15, 553, 22};
-    quickSort(arr, 0, 29);
-    int mostCommon = 0;
-    int max = 1;
+    int maxFrequency = 1;
+    int mostCommon = array[0];
     int counter = 1;
-    for(int i = 1; i < 30; i++)
+    for (int i = 1; i < length; i++)
     {
-        if (arr[i - 1] == arr[i])
+        if (array[i - 1] == array[i])
         {
             counter++;
         }
-        else if (counter > max)
+        else if (counter > mostCommon)
         {
-            max = counter;
-            mostCommon = arr[i - 1];
+            mostCommon = array[i - 1];
+            maxFrequency = counter;
             counter = 1;
         }
     }
-    printf("Most common number is %d. It appears %d times", mostCommon, max);
+    return mostCommon;
+}
+
+int main()
+{
+    int length = 0;
+    printf("Enter the length of the array: ");
+    scanf("%d", &length);
+    if (length <= 0)
+    {
+        printf("Wrong input: the length should be positive");
+        return -1;
+    }
+
+    int *array = calloc(length, sizeof(int));
+    if (array == NULL)
+    {
+        printf("Memory error");
+        return -1;
+    }
+
+    printf("Enter number:\n");
+    for (int i = 0; i < length; ++i)
+    {
+        printf("%d: ", (i + 1));
+        scanf("%d \n", &array[i]);
+    }
+    printf("\n");
+
+    quickSort(array, 0, length - 1);
+
+    int mstCommon = mostCommon(array, length);
+    printf("Most common number is %d", mstCommon);
     return 0;
 }
