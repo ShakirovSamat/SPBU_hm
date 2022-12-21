@@ -91,9 +91,10 @@ int calculatePolishNotaion(char polishNotaion[], int *result)
             {
                 pushStack(stack, (int)(int)polishNotaion[i] - 48);
             }
+
+            return -5;
         }
     }
-    // разобрать коварные случаи
     if (isEmptyStack(stack) == 0)
     {
         popStack(stack, result);
@@ -184,6 +185,11 @@ int main()
     if (error != 0)
     {
         printErrorMessage(error);
+        if (error == -5)
+        {
+            printf("Wrong input: onle numbers and arithmetic sighns are allowed");
+            return -1;
+        }
     }
     else
     {
