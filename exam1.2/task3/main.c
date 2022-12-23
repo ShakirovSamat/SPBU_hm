@@ -9,6 +9,10 @@ bool isCorrectingString(char string[], int length)
     for (int i = 0; i < length - 1; ++i)
     {
         char currentChar = string[i];
+        if (currentChar == '\0')
+        {
+            return stage == 4;
+        }
         switch (stage)
         {
         case 1:

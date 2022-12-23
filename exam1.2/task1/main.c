@@ -1,5 +1,6 @@
 #include <stdio.h>
 #include <stdbool.h>
+#include <string.h>
 
 #define LENGTH 257
 
@@ -38,7 +39,7 @@ int getDecimalDigitFromRoman(char romanDigit, int *decimalDigit)
 }
 int getDecimalNumberFromRoman(char romanNumber[], int length, int *decimalNumber)
 {
-    while (romanNumber[length] == 0)
+    while (romanNumber[length] == 0 || romanNumber[length] == '\n')
     {
         --length;
     }
@@ -125,6 +126,7 @@ int main()
     printf("This program converts a roman number to a decimal\n");
     printf("Enter roman number: ");
     fgets(romanNumber, LENGTH, stdin);
+    romanNumber[strlen(romanNumber) - 1] = '\0';
 
     int decimalNumber = 0;
 
