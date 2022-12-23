@@ -121,6 +121,7 @@ int getDecimalNumberFromRoman(char romanNumber[], int length, int *decimalNumber
 int main()
 {
     char romanNumber[LENGTH] = {0};
+
     printf("This program converts a roman number to a decimal\n");
     printf("Enter roman number: ");
     fgets(romanNumber, LENGTH, stdin);
