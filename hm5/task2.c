@@ -82,7 +82,7 @@ bool isEmptyStack(Stack *stack)
 {
     return stack->top == NULL;
 }
-bool isCorrectString(char string[])
+bool isCorrectString(char string[], char errorMessage[])
 {
     Stack *stack = createStack();
     if (stack == NULL)
@@ -96,7 +96,7 @@ bool isCorrectString(char string[])
     int a = 0;
     for (int i = 0; string[i] != '\0'; ++i)
     {
-        int previousBracket = 0;
+        char previousBracket = 0;
         switch (string[i])
         {
         case '(':
@@ -108,7 +108,9 @@ bool isCorrectString(char string[])
             popStack(stack, &previousBracket);
             if (previousBracket != '(' || isEmptyStack(stack) && previousBracket == 0)
             {
-                printf("%c) is in the string", previousBracket);
+                messe = "*) is in the string";
+                message[0] = previousBracket;
+                errorMessage = &message;
                 return false;
             }
             break;
@@ -116,7 +118,9 @@ bool isCorrectString(char string[])
             popStack(stack, &previousBracket);
             if (previousBracket != '{' || isEmptyStack(stack) && previousBracket == 0)
             {
-                printf("%c} is in the string", previousBracket);
+                char message[] = "*} is in the string";
+                message[0] = previousBracket;
+                errorMessage = &message;
                 return false;
             }
             break;
@@ -124,7 +128,9 @@ bool isCorrectString(char string[])
             popStack(stack, &previousBracket);
             if (previousBracket != '[' || isEmptyStack(stack) && previousBracket == 0)
             {
-                printf("(%c] is in the string", previousBracket);
+                char message[] = "*] is in the string";
+                message[0] = previousBracket;
+                errorMessage = &message;
                 return false;
             }
             break;
@@ -137,27 +143,28 @@ bool isCorrectString(char string[])
 bool test()
 {
     char strings[6][7] = {"(){}[]", "((()))", "({[})]", "({})[]", "(a)[{}]", "aaaaaaa"};
-    if (!isCorrectString(strings[0]))
+    char *pointer = NULL;
+    if (!isCorrectString(strings[0], pointer))
     {
         return false;
     }
-    if (!isCorrectString(strings[1]))
+    if (!isCorrectString(strings[1], pointer))
     {
         return false;
     }
-    if (isCorrectString(strings[2]))
+    if (isCorrectString(strings[2], pointer))
     {
         return false;
     }
-    if (!isCorrectString(strings[3]))
+    if (!isCorrectString(strings[3], pointer))
     {
         return false;
     }
-    if (!isCorrectString(strings[4]))
+    if (!isCorrectString(strings[4], pointer))
     {
         return false;
     }
-    if (!isCorrectString(strings[5]))
+    if (!isCorrectString(strings[5], pointer))
     {
         return false;
     }
@@ -177,13 +184,14 @@ int main()
     scanf_s("%100s", str);
 
     // Добавить почему строка неправильная
-    if (isCorrectString(str))
+    char *errorMessage = NULL;
+    if (isCorrectString(str, errorMessage))
     {
         printf("String is correct");
     }
     else
     {
-        printf("String is incorrect");
+        printf("%s", errorMessage);
     }
     return 0;
 }
