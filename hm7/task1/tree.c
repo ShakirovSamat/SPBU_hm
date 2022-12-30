@@ -1,9 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
-#include <stdlib.h>
 #include <stddef.h>
 #include <stdbool.h>
-#include <stdio.h>
 #include "tree.h"
 
 typedef struct Node
