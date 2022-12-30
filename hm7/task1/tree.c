@@ -1,61 +1,50 @@
+#include <stdio.h>
+#include <stdlib.h>
 #include <stdlib.h>
 #include <stddef.h>
 #include <stdbool.h>
 #include <stdio.h>
+#include "tree.h"
 
-typedef int Error;
-
-typedef struct TreeNode
+typedef struct Node
 {
     int key;
     char *value;
-    struct TreeNode *parent;
-    struct TreeNode *left;
-    struct TreeNode *right;
-}TreeNode;
+    struct Node *left;
+    struct Node *right;
+} Node;
 
-TreeNode * createTree()
+typedef struct Tree
 {
-    return calloc(1, sizeof(TreeNode));
-}
+    struct Node *root;
+} Tree;
 
-Error add(TreeNode *tree, int key, char *value)
+Tree *createTree()
+{
+    return calloc(1, sizeof(Tree));
+}
+int insert(Tree *tree, int key, char *value)
 {
     if (tree == NULL)
     {
-        return -1;
+        return OUT_OF_MEMORY;
     }
 
-    TreeNode *newNode = calloc(1, sizeof(TreeNode));
-    newNode->value = value;
-    newNode->key = key;
-
-    if (tree->value == NULL || tree->key == key)
+    Node *newNode = calloc(1, sizeof(Node));
+    if (newNode == NULL)
     {
-        tree->key = key;
-        tree->value = value;
-        return 0;
+        return OUT_OF_MEMORY;
     }
-    TreeNode *currentNode = tree;
-    TreeNode *previousNode = NULL;
+    newNode->key = key;
+    newNode->value = value;
 
+    Node *currentNode = tree->root;
+    Node *previousNode = NULL;
     while (currentNode != NULL)
     {
         previousNode = currentNode;
-        if (currentNode->key == key)
-        {
-            if (previousNode->key > key)
-            {
-                previousNode->left = newNode;
-            }
-            else
-            {
-                previousNode->right = newNode;
-            }
-            newNode->parent = previousNode;
-            return 0;
-        }
-        else if (currentNode->key > key)
+
+        if (newNode->key < currentNode->key)
         {
             currentNode = currentNode->left;
         }
@@ -65,34 +54,32 @@ Error add(TreeNode *tree, int key, char *value)
         }
     }
 
-    if (previousNode->key > key)
+    if (previousNode == NULL)
+    {
+        tree->root = newNode;
+    }
+    else if (newNode->key < previousNode->key)
     {
         previousNode->left = newNode;
     }
     else
     {
-        previousNode->right = newNode;     
+        previousNode->right = newNode;
     }
-    newNode->parent = previousNode;
-    return 0;
+    return OK;
 }
 
-char * get(TreeNode *tree, int key)
+int get(Tree *tree, int key, char **result)
 {
     if (tree == NULL)
     {
-        return NULL;
+        return OUT_OF_MEMORY;
     }
 
-    TreeNode *currentNode = tree;
-
-    while (currentNode != NULL)
+    Node *currentNode = tree->root;
+    while (currentNode != NULL && key != currentNode->key)
     {
-        if (currentNode->key == key)
-        {
-            return currentNode->value;
-        }
-        else if (currentNode->key > key)
+        if (key < currentNode->key)
         {
             currentNode = currentNode->left;
         }
@@ -101,25 +88,27 @@ char * get(TreeNode *tree, int key)
             currentNode = currentNode->right;
         }
     }
-    return NULL;
+
+    if (currentNode == NULL)
+    {
+        return NOT_FOUND;
+    }
+
+    *result = currentNode->value;
+    return OK;
 }
 
-bool isExist(TreeNode *tree, int key)
+bool isExist(Tree *tree, int key)
 {
     if (tree == NULL)
     {
-        return -1;
+        return false;
     }
 
-    TreeNode *currentNode = tree;
-    
-    while (currentNode != NULL)
+    Node *currentNode = tree->root;
+    while (currentNode != NULL && key != currentNode->key)
     {
-        if (currentNode->key == key)
-        {
-            return true;
-        }
-        else if(currentNode-> key > key)
+        if (key < currentNode->key)
         {
             currentNode = currentNode->left;
         }
@@ -128,64 +117,146 @@ bool isExist(TreeNode *tree, int key)
             currentNode = currentNode->right;
         }
     }
-    return false;
+
+    return currentNode != NULL;
 }
 
-Error delete(TreeNode * tree, int key)
+int getMin(Node *node, Node *min, Node *minParent)
+{
+    if (node == NULL)
+    {
+        OUT_OF_MEMORY;
+    }
+    Node *currentNode = node;
+    Node *previousNode = NULL;
+    while (node->left != NULL)
+    {
+        previousNode = currentNode;
+        currentNode = currentNode->left;
+    }
+    minParent = previousNode;
+    min = currentNode;
+
+    return OK;
+}
+
+int delete(Tree *tree, int key)
 {
     if (tree == NULL)
     {
-        return 0;
+        return OUT_OF_MEMORY;
     }
-    
-    if (tree->key > key)
+
+    Node *currentNode = tree->root;
+    Node *previousNode = NULL;
+
+    while (currentNode != NULL && key != currentNode->key)
     {
-        delete(tree->left, key);
+        previousNode = currentNode;
+        if (key < currentNode->key)
+        {
+            currentNode = currentNode->left;
+        }
+        else
+        {
+            currentNode = currentNode->right;
+        }
     }
-    else if (tree->key < key)
+
+    if (currentNode == NULL)
     {
-        delete(tree->right, key);
+        return NOT_FOUND;
+    }
+
+    // Если удаляем лист
+    if (currentNode->left == NULL && currentNode->right == NULL)
+    {
+        if (previousNode->left == currentNode)
+        {
+            previousNode->left = NULL;
+        }
+        else
+        {
+            previousNode->right = NULL;
+        }
+        free(currentNode);
+        return OK;
+    }
+
+    // Если одного ребёнка не существует
+    if (currentNode->left != NULL && currentNode->right == NULL)
+    {
+        // Если корень
+        if (tree->root == currentNode)
+        {
+            tree->root = currentNode->left;
+            free(currentNode);
+            return OK;
+        }
+        if (previousNode->left == currentNode)
+        {
+            previousNode->left = currentNode->left;
+        }
+        else
+        {
+            previousNode->right = currentNode->left;
+        }
+        free(currentNode);
+        return OK;
+    }
+    else if (currentNode->left == NULL && currentNode->right != NULL)
+    {
+        if (tree->root == currentNode)
+        {
+            tree->root = currentNode->right;
+            free(currentNode);
+            return OK;
+        }
+        if (previousNode->left == currentNode)
+        {
+            previousNode->left = currentNode->left;
+        }
+        else
+        {
+            previousNode->left = currentNode->left;
+        }
+        free(currentNode);
+        return OK;
+    }
+
+    // если оба ребёнка существуют
+    Node *min = currentNode->right;
+    previousNode = currentNode;
+    while (min->left != NULL)
+    {
+        previousNode = min;
+        min = min->left;
+    }
+    currentNode->key = min->key;
+    currentNode->value = min->value;
+    if (previousNode == currentNode)
+    {
+        currentNode->right = NULL;
     }
     else
     {
-        if (tree->left == NULL && tree->right == NULL)
-        {
-            if (tree->parent->left == tree)
-            {
-                tree->parent->left = NULL;
-            }
-            else
-            {
-                tree->parent->right = NULL;
-            }
-            free(tree);
-            return 0;
-        }
-        else if (tree->left != NULL && tree->right != NULL)
-        {
-            if (tree->right->left == NULL)
-            {
-                if (tree->parent->left == tree)
-                {
-                    tree->parent->left = tree->right;
-                }
-                else
-                {
-                    tree->parent->right = tree->right;
-                }
-                tree->right->parent = tree->parent;
-                free(tree);
-                return 0;
-            }
-            TreeNode *currentNode = tree->right->left;
-            while (currentNode->left != NULL)
-            {
-                currentNode = currentNode->left;
-            }
-            tree->value = currentNode->value;
-            tree->key = currentNode->key;
-            delete(currentNode, currentNode->key); 
-        }
+        previousNode->left = NULL;
     }
-    return 0;
+    free(min);
+    return OK;
+}
+
+void print(Node *node)
+{
+    if (node != NULL)
+    {
+        print(node->left);
+        printf("%s\n", node->value);
+        print(node->right);
+    }
+}
+
+void printTree(Tree *tree)
+{
+    print(tree->root);
 }

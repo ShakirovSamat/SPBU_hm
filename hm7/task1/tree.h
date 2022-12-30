@@ -1,15 +1,22 @@
 #include <stdbool.h>
 
-typedef int Error;
+enum Errors
+{
+    OUT_OF_MEMORY,
+    OK,
+    NOT_FOUND
+};
 
-typedef struct TreeNode TreeNode;
+typedef struct Tree Tree;
 
-TreeNode * createTree();
+Tree *createTree();
 
-Error add(TreeNode *tree, int key, char *value);
+int insert(Tree *tree, int ley, char *value);
 
-char * get(TreeNode *tree, int key);
+int get(Tree *tree, int key, char **result);
 
-bool isExist(TreeNode *tree, int key);
+bool isExist(Tree *tree, int key);
 
-Error delete(TreeNode * tree, int key);
+int delete(Tree *tree, int key);
+
+void printTree(Tree *tree);
