@@ -4,61 +4,66 @@
 #include <stdbool.h>
 #include "loopedList.h"
 
+int getLastWarrior(LoopedList *warriors, int step)
+{
+    while (!isOnlyOneElement(warriors))
+    {
+        delete (warriors, step - 1);
+    }
+    return get(warriors, 0);
+}
+
 bool test()
 {
-    LoopedList *list = create();
-    int input[2][3] = {{10, 5, 3}, {5, 2, 3}};
-    for (int i = 0; i < 2; ++i)
+    LoopedList *loopedList = createLoopedList();
+    for (int i = 0; i < 10; ++i)
     {
-        for (int j = 0; j < input[i][0]; ++j)
-        {
-            add(list, j + 1);
-        }
-        while (getLen(list) != 1)
-        {
-            delete (list, input[i][1]);
-        }
-        if (get(list, 0) != input[i][2])
-        {
-            return false;
-        }
-        delete (list, 0);
+        add(loopedList, i);
+    }
+    if (!(4 == getLastWarrior(loopedList, 3)))
+    {
+        return false;
+    }
+    for (int i = 0; i < 11; ++i)
+    {
+        add(loopedList, i);
+    }
+    if (!(7 == getLastWarrior(loopedList, 3)))
+    {
+        return false;
     }
     return true;
 }
 
 int main()
 {
-    // Добавить тесты на алгоритм фунции
-    if (!test())
-    {
-        // Расширить информацию об ошибке
-        printf("Error");
-        return -1;
-    }
     int amountOfWarriors = 0;
     int step = 0;
-    LoopedList *list = create();
-    // Проверка памяти
-    //  Проверить корректность ввода
+    LoopedList *loopedList = createLoopedList();
+    if (loopedList == NULL)
+    {
+        return OUT_OF_MEMORY;
+    }
     printf("Enter amount of warriors: ");
-    scanf_s("%d", &amountOfWarriors);
+    int isSuccesful = scanf_s("%d", &amountOfWarriors);
+    if (!(isSuccesful))
+    {
+        return INPUT_ERROR;
+    }
 
     printf("Enter step: ");
-    scanf_s("%d", &step);
+    isSuccesful = scanf_s("%d", &step);
+    if (!(isSuccesful))
+    {
+        return INPUT_ERROR;
+    }
 
     for (int i = 0; i < amountOfWarriors; ++i)
     {
-        add(list, i + 1);
+        add(loopedList, i + 1);
     }
 
-    // Добавить фунцию, которая проверят состоит ли список из одного элемента
-    while (getLen(list) != 1)
-    {
-        printList(list);
-        printf("\n");
-        delete (list, step - 1);
-    }
-    printf("Number of last warrior: %d", get(list, 0));
+    int lastWarrior = getLastWarrior(loopedList, step);
+    printf("Last warrior is %d", lastWarrior);
     return 0;
 }

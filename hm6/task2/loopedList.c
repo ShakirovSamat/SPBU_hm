@@ -1,9 +1,8 @@
 #include <stddef.h>
 #include <stdio.h>
 #include <stdlib.h>
+#include <stdbool.h>
 #include "loopedList.h"
-
-typedef int Error;
 
 typedef struct Node
 {
@@ -13,139 +12,159 @@ typedef struct Node
 
 typedef struct LoopedList
 {
-    Node *head;
-    Node *tail;
+    struct Node *head;
+    struct Node *tail;
 } LoopedList;
 
-LoopedList *create()
+LoopedList *createLoopedList()
 {
     return calloc(1, sizeof(LoopedList));
 }
 
-Error add(LoopedList *list, int value)
+int add(LoopedList *loopedList, int value)
 {
-    if (list == NULL)
+    if (loopedList == NULL)
     {
-        return -1;
+        return OUT_OF_MEMORY;
     }
 
     Node *newNode = calloc(1, sizeof(Node));
-    // Проверить память
+    if (newNode == NULL)
+    {
+        return OUT_OF_MEMORY;
+    }
     newNode->value = value;
 
-    if (list->head == NULL)
+    if (loopedList->head == NULL)
     {
         newNode->next = newNode;
-        list->head = newNode;
-        list->tail = newNode;
-        return 0;
+        loopedList->head = newNode;
+        loopedList->tail = newNode;
+        return OK;
     }
 
-    list->tail->next = newNode;
-    newNode->next = list->head;
-    list->tail = newNode;
-    return 0;
+    loopedList->tail->next = newNode;
+    newNode->next = loopedList->head;
+    loopedList->tail = newNode;
+    return OK;
 }
 // Синхронизировать индексы в функциях
-int get(LoopedList *list, int index)
+int get(LoopedList *loopedList, int index)
 {
-    if (list == NULL)
+    if (loopedList == NULL)
     {
-        return -1;
+        return OUT_OF_MEMORY;
     }
 
-    Node *curNode = list->head;
-    Node *prevNode = NULL;
+    Node *currentNode = loopedList->head;
+    Node *previousNode = NULL;
 
     for (int i = 0; i < index; i++)
     {
-        prevNode = curNode;
-        curNode = curNode->next;
+        previousNode = currentNode;
+        currentNode = currentNode->next;
     }
 
-    return curNode->value;
+    return currentNode->value;
 }
 
-Error delete(LoopedList *list, int index)
+int delete(LoopedList *loopedList, int index)
 {
-    if (list == NULL)
+    if (loopedList == NULL)
+    {
+        return OUT_OF_MEMORY;
+    }
+
+    if (index < 0)
     {
         return -1;
     }
 
-    if (index < 1)
+    if (index == 0)
     {
-        return -1;
-    }
-
-    if (index == 1)
-    {
-        Node *tmp = list->head;
-        list->tail->next = list->head->next;
-        list->head = list->tail;
+        Node *tmp = loopedList->head;
+        loopedList->tail->next = loopedList->head->next;
+        loopedList->head = loopedList->tail;
         free(tmp);
-        return 0;
+        return OK;
     }
 
-    Node *curNode = list->head;
-    Node *prevNode = NULL;
+    Node *currentNode = loopedList->head;
+    Node *previousNode = NULL;
 
     int i = 0;
     while (i < index)
     {
-        prevNode = curNode;
-        curNode = curNode->next;
+        previousNode = currentNode;
+        currentNode = currentNode->next;
         ++i;
     }
 
-    list->head = curNode->next;
-    list->tail = prevNode;
-    list->tail->next = list->head;
+    loopedList->head = currentNode->next;
+    loopedList->tail = previousNode;
+    loopedList->tail->next = loopedList->head;
 
-    free(curNode);
-    return 0;
+    free(currentNode);
+    return OK;
 }
 
-int getLen(LoopedList *list)
+int getLen(LoopedList *loopedList)
 {
-    if (list == NULL)
+    if (loopedList == NULL)
     {
         return -1;
     }
-    if (list->head == NULL)
+    if (loopedList->head == NULL)
     {
         return 0;
     }
-    Node *curNode = list->head;
+    Node *currentNode = loopedList->head;
     int len = 1;
-    while (curNode != list->tail)
+    while (currentNode != loopedList->tail)
     {
         len++;
-        curNode = curNode->next;
+        currentNode = currentNode->next;
     }
     return len;
 }
 
-Error printList(LoopedList *list)
+bool isOnlyOneElement(LoopedList *loopedList)
 {
-    if (list == NULL)
+    if (loopedList == NULL)
     {
-        return -1;
+        return false;
+    }
+    if (loopedList->head == NULL)
+    {
+        return false;
+    }
+    if (loopedList->head == loopedList->tail)
+    {
+        return true;
+    }
+    return false;
+}
+
+int printList(LoopedList *loopedList)
+{
+    if (loopedList == NULL)
+    {
+        return OUT_OF_MEMORY;
     }
 
-    Node *curNode = list->head;
+    Node *currentNode = loopedList->head;
 
     printf("List: ");
-    if (list->head == NULL)
+    if (loopedList->head == NULL)
     {
-        return 0;
+        return OK;
     }
-    while (curNode != list->tail)
+    while (currentNode != loopedList->tail)
     {
-        printf("%d ", curNode->value);
-        curNode = curNode->next;
+        printf("%d ", currentNode->value);
+        currentNode = currentNode->next;
     }
 
-    printf("%d", curNode->value);
-    return 0;
+    printf("%d", currentNode->value);
+    return OK;
 }
