@@ -1,30 +1,20 @@
-#ifndef CORE_H_INCLUDED
-#define CORE_H_INCLUDED
-#include <stdbool.h>
+#pragma once
 
-typedef enum Error
+enum Errors
 {
+    OUT_OF_MEMORY,
     OK,
-    MemoryError
-} Error;
+    OUT_OF_LIST
+};
 
 typedef struct SortedList SortedList;
 
 SortedList *createSortedList();
 
-// Adding new element to sorted list
-// has error code = -1
-int addValue(SortedList *SortedList, int value);
+int insert(SortedList *sortedList, int value);
 
-// Deleting elemnet of sorted list
-// has error code = -1
-int deleteValue(SortedList *sortedList, int value);
+int deleteElement(SortedList *sortedList, int value);
 
-// Printing sorted list in console
-// has error code = -1
-int printList(SortedList *sortedList);
+int printSoredList(SortedList *sortedList);
 
-// Tests for sorted list
-bool sortedListTest();
-
-#endif // CORE_H_INCLUDED
+int get(SortedList *sortedList, int index, int *result);

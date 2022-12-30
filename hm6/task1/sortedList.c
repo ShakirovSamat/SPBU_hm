@@ -1,8 +1,6 @@
-#include "sortedList.h"
 #include <stdlib.h>
-#include <stddef.h>
 #include <stdio.h>
-#include <stdbool.h>
+#include "sortedList.h"
 
 typedef struct Node
 {
@@ -12,7 +10,7 @@ typedef struct Node
 
 typedef struct SortedList
 {
-    Node *head;
+    struct Node *head;
 } SortedList;
 
 SortedList *createSortedList()
@@ -20,124 +18,128 @@ SortedList *createSortedList()
     return calloc(1, sizeof(SortedList));
 }
 
-int addValue(SortedList *sortedList, int value)
+int insert(SortedList *sortedList, int value)
 {
     if (sortedList == NULL)
     {
-        return -1;
+        return OUT_OF_MEMORY;
     }
 
     Node *newNode = calloc(1, sizeof(Node));
-    // Проверить память
+    if (newNode == NULL)
+    {
+        return OUT_OF_MEMORY;
+    }
     newNode->value = value;
-
-    Node *prevNode = NULL;
-    Node *curNode = sortedList->head;
-    // Сокращения убрать
 
     if (sortedList->head == NULL)
     {
         sortedList->head = newNode;
-        return 0;
+        return OK;
     }
-    if (value <= sortedList->head->value)
+
+    Node *currentNode = sortedList->head;
+    Node *previousNode = NULL;
+    while (currentNode != NULL && value > currentNode->value)
+    {
+        previousNode = currentNode;
+        currentNode = currentNode->next;
+    }
+
+    if (previousNode == NULL)
     {
         newNode->next = sortedList->head;
         sortedList->head = newNode;
-        return 0;
+        return OK;
     }
-
-    while (curNode->next != NULL)
+    if (currentNode == NULL)
     {
-        prevNode = curNode;
-        curNode = curNode->next;
-
-        if (prevNode->value <= value && value <= curNode->value)
-        {
-            prevNode->next = newNode;
-            newNode->next = curNode;
-            return 0;
-        }
-    }
-    curNode->next = newNode;
-    return 0;
-}
-
-int deleteValue(SortedList *sortedList, int value)
-{
-    if (sortedList == NULL)
-    {
-        return -1;
-    }
-    Node *prevNode = NULL;
-    Node *curNode = sortedList->head;
-
-    if (curNode->value == value)
-    {
-        sortedList->head = curNode->next;
-        free(curNode);
-        return 0;
+        previousNode->next = newNode;
+        return OK;
     }
 
-    while (curNode != NULL)
-    {
-        prevNode = curNode;
-        curNode = curNode->next;
-
-        if (value == curNode->value)
-        {
-            prevNode->next = curNode->next;
-            free(curNode);
-            return 0;
-        }
-    }
-
-    return 0;
-}
-
-int printList(SortedList *sortedList)
-{
-    if (sortedList == NULL)
-    {
-        return MemoryError;
-    }
-    Node *curNode = sortedList->head;
-    while (curNode != NULL)
-    {
-        printf("%d ", curNode->value);
-        curNode = curNode->next;
-    }
+    previousNode->next = newNode;
+    newNode->next = currentNode;
     return OK;
 }
 
-bool sortedListTest()
+int deleteElement(SortedList *sortedList, int value)
 {
-    SortedList *list = createSortedList();
-    int error = 0;
-    error -= addValue(list, 1);
-    error -= addValue(list, 5);
-    error -= addValue(list, 2);
-    error -= addValue(list, 7);
-    error -= deleteValue(list, 5);
-    if (error != 0)
+    if (sortedList == NULL)
     {
-        return false;
+        return OUT_OF_MEMORY;
     }
-    if (list->head->value != 1)
+
+    // Если список пуст
+    if (sortedList->head == NULL)
     {
-        return false;
+        return OK;
     }
-    if (list->head->next->value != 2)
+    // Если удаляем голову
+    if (value == sortedList->head->value)
     {
-        return false;
+        Node *tmp = sortedList->head;
+        sortedList->head = sortedList->head->next;
+        free(tmp);
+        return OK;
     }
-    if (list->head->next->next->value != 7)
+
+    Node *currentNode = sortedList->head;
+    Node *previousNode = NULL;
+    while (currentNode != NULL && value > currentNode->value)
     {
-        return false;
+        previousNode = currentNode;
+        currentNode = currentNode->next;
     }
-    if (list->head->next->next->next != NULL)
+    // Удаление элемента, у которого есть и предок, и ребенок
+    if (currentNode != NULL && value == currentNode->value)
     {
-        return false;
+        previousNode->next = currentNode->next;
+        free(currentNode);
+        return OK;
     }
-    return true;
+    // Удаление если нет ребёнка
+    previousNode->next = NULL;
+    free(currentNode);
+    return OK;
+}
+
+int printSoredList(SortedList *sortedList)
+{
+    if (sortedList == NULL)
+    {
+        return OUT_OF_MEMORY;
+    }
+
+    Node *currentNode = sortedList->head;
+    printf("SortedList: ");
+    while (currentNode != NULL)
+    {
+        printf("%d ", currentNode->value);
+        currentNode = currentNode->next;
+    }
+    printf("\n\n");
+    return OK;
+}
+
+int get(SortedList *sortedList, int index, int *result)
+{
+    if (sortedList == NULL)
+    {
+        return OUT_OF_MEMORY;
+    }
+
+    Node *currentNode = sortedList->head;
+    int i = 0;
+    while (currentNode != NULL && i < index)
+    {
+        currentNode = currentNode->next;
+        ++i;
+    }
+    if (i == index)
+    {
+        *result = currentNode->value;
+        return OK;
+    }
+    return OUT_OF_LIST;
 }
