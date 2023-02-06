@@ -1,45 +1,44 @@
 #include <stdio.h>
+#include <stddef.h>
 #include <stdlib.h>
 #include <string.h>
-#include <stdbool.h>
-#include "mergeSort.h"
+#include <linkedList.h>
 
 int main()
 {
-    if (!test())
+    LinkedList *linkedList = createLinkedList();
+    if (linkedList == NULL)
     {
-        printf("mergeSort Error");
-        return -1;
+        return OUT_OF_MEMRY;
     }
-    int byWhatSort = -1;
-    do
-    {
-        printf("By watch do you want to sort data:\n1 - by name\n2 - by number\nEnter comand: ");
-        scanf_s("%d", &byWhatSort);
-    } while(byWhatSort != 1 && byWhatSort != 2);
-    
+
     FILE *file = fopen("data.txt", "r");
-    Person *persons[100];
-    int amountOfPersons = 0;
-    char name[20];
-    char number[20];
-    for (; amountOfPersons < 100; amountOfPersons++)
+    int error = readFile(file, linkedList);
+    if (error != OK)
     {
-        if (fscanf(file, "%s %s", name, number) == EOF)
+        return error;
+    }
+    int command = 0;
+    printf("File was readed sucessfully\nBy what do you wantt sort number or namer?\n");
+    printf("1 - number\n2- name\n3 - exit\n");
+    while (command != 3)
+    {
+        printf("Enter command: ");
+        scanf("%d", &command);
+        printf("\n\n");
+        switch (command)
         {
+        case 1:
+            mergerSort(linkedList, "number");
+            printLinkedList(linkedList);
             break;
+        case 2:
+            mergerSort(linkedList, "name");
+            printLinkedList(linkedList);
+            break;
+        case 3:
+            return OK;
         }
-        Person *newPerson = calloc(1, sizeof(Person));
-        strcpy(newPerson->name, name);
-        strcpy(newPerson->number, number);
-        persons[amountOfPersons] = newPerson; 
     }
-
-    mergeSort(persons, amountOfPersons, byWhatSort);
-
-    for (int i = 0; i < amountOfPersons; ++i)
-    {
-        printf("  %s : %s\n", persons[i]->name, persons[i]->number);
-    }
-    return 0;
+    return OK;
 }
